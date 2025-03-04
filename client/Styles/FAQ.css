@@ -1,0 +1,162 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}/*Enlève les paramètres par défaut des navigateurs*/
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 100vh;
+    height: auto;
+    min-height: 90vh;
+
+}
+
+header {
+    height: 10vh;
+    min-height: 10vh;
+    width: 100vw;
+    background-color: #11314f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}
+
+
+.navbar {
+    display: flex;
+    align-items: center; /* Centre tous les éléments verticalement */
+    justify-content: space-between;
+    width: 80vw;
+}
+
+.navbar .logo {
+    border-radius: 5px;
+}
+
+a {
+    color:white;
+    font-size: 16px;
+    transition: transform 0.2s ease-in-out;
+    display: inline-block;
+}
+
+a:hover{
+    transform: scale(1.2);
+}
+
+.navbar .nav-link ul {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .nav-link li {
+    margin: 15px;
+}
+
+.navbar img {
+    height: auto; 
+    max-height: 50px;
+}
+
+
+
+main{
+    width: 100vw; 
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15%;
+    padding-bottom: 5%;
+}
+
+details {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e8e0d1;
+    width: 70vw;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: opacity 0.2s ease-in-out;
+}
+
+details[open]{
+    opacity: 1;
+}
+
+details:hover{
+    opacity:1;
+}
+
+
+summary {
+    cursor: pointer;
+}
+
+
+
+
+
+
+footer {
+    height: 20vh;
+    min-height: 20vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    background-color: #11314f;
+    display: flex;
+    flex-direction:row;
+    margin-top: auto;
+
+}
+
+.sectionLogo img{
+    border-radius: 10px;
+}
+
+.sectionLogo{
+    padding:30px;
+}
+
+.partie1{
+    padding: 30px;
+}
+
+.partie1 a{
+    color:white;
+}
+
+
+.partie2{
+    padding: 30px;
+}
+
+.partie2 li{
+    padding: 5px;
+}
+
+.partie1 li{
+    padding: 5px;
+}
+
+.partie2 a{
+    color:white;
+}
+
+.reseau ul{
+    display: flex;
+}
+
+.reseau li{
+    margin: 5px;
+}
