@@ -19,9 +19,9 @@
       <li class=""><a href="utilisateurs.php"><span class="glyphicon glyphicon-lock"></span> <span>Utilisateurs</span></a></li>
       <li class=""><a href="oeuvres.php"><i class="fa fa-tasks"></i> <span>Oeuvres</span></a></li>
       <li class=""><a href="artisans.php"><i class="fa fa-tasks"></i> <span>Artisans</span></a></li>
-      <li class=""><a href="commandes.php"><i class="fa fa-users"></i> <span>Commandes</span></a></li>
       <li class=""><a href="clients.php"><i class="fa fa-black-tie"></i> <span>Clients</span></a></li>
-
+      <li class=""><a href="commandes.php"><i class="fa fa-users"></i> <span>Commandes</span></a></li>
+      
     </ul>
   </section>
   <!-- /.sidebar -->
