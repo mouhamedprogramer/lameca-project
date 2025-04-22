@@ -129,10 +129,17 @@
 <script>
 $(function(){
   // Initialiser le DataTable
-  $('#example1').DataTable({
-    responsive: true,
-    "order": [[ 1, "desc" ]] // Trier par date (décroissant)
-  });
+  if (!$.fn.DataTable.isDataTable('#example1')) {
+    // Initialiser le DataTable seulement si ce n'est pas déjà fait
+    $('#example1').DataTable({
+      responsive: true,
+      "order": [[ 2, "asc" ]] // Trier par nom
+    });
+  } else {
+    // Si la table est déjà initialisée, on peut mettre à jour certaines options
+    var table = $('#example1').DataTable();
+    table.order([2, 'asc']).draw();
+  }
   
   // Actions des boutons
   $(document).on('click', '.edit', function(e){
