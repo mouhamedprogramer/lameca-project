@@ -82,7 +82,7 @@
                 else{
                     $sql = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, telephone = ?, adresse = ?, pays = ?, ville = ?, code_postal = ?, date_naissance = ?, genre = ?, photo = ? WHERE idUtilisateur = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("ssssssssssi", $nom, $prenom, $email, $telephone, $adresse, $pays, $ville, $code_postal, $date_naissance, $genre, $filename, $id);
+                    $stmt->bind_param("sssssssssssi", $nom, $prenom, $email, $telephone, $adresse, $pays, $ville, $code_postal, $date_naissance, $genre, $filename, $id);
                 }
                 
                 $stmt->execute();
