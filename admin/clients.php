@@ -399,6 +399,112 @@ function getClientOrders(id){
     }
   });
 }
+
+
+
+// Gestionnaires pour les boutons d'action
+$(document).on('click', '#create_order', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  $('#client_order_create').modal('show');
+  $('#new_order_client_id').val(clientId);
+  
+  // Charger les œuvres disponibles
+  $.ajax({
+    type: 'POST',
+    url: 'clients_get_oeuvres.php',
+    data: {client_id: clientId},
+    dataType: 'html',
+    success: function(response) {
+      $('#new_order_oeuvre').html(response);
+    }
+  });
+});
+
+$(document).on('click', '#send_email', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  var clientEmail = $('#view_email').text();
+  var clientName = $('#view_nom').text();
+  
+  $('#email_modal').modal('show');
+  $('#email_client_id').val(clientId);
+  $('#email_to').val(clientEmail);
+  $('#email_to_name').val(clientName);
+});
+
+$(document).on('click', '#export_data', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  window.location.href = 'clients_export.php?id=' + clientId;
+});
+
+$(document).on('click', '#view_orders', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  $('#client_orders').modal('show');
+  getClientOrders(clientId);
+});
+
+// Pour l'édition depuis la vue détaillée
+$(document).on('click', '.edit-from-view', function(e) {
+  e.preventDefault();
+  $('#view').modal('hide');
+  setTimeout(function() {
+    $('#edit').modal('show');
+  }, 500);
+});
+
+// Pour changer le prix lorsqu'une œuvre est sélectionnée
+$(document).on('change', '#new_order_oeuvre', function() {
+  var oeuvreId = $(this).val();
+  if (oeuvreId) {
+    $.ajax({
+      type: 'POST',
+      url: 'clients_get_oeuvre_prix.php',
+      data: {oeuvre_id: oeuvreId},
+      dataType: 'json',
+      success: function(response) {
+        $('#new_order_prix').val(response.prix);
+        updateTotal();
+      }
+    });
+  }
+});
+
+// Pour mettre à jour le total lors du changement de quantité
+$(document).on('input', '#new_order_quantite', function() {
+  updateTotal();
+});
+
+// Fonction pour mettre à jour le total
+function updateTotal() {
+  var prix = parseFloat($('#new_order_prix').val()) || 0;
+  var quantite = parseInt($('#new_order_quantite').val()) || 0;
+  var total = prix * quantite;
+  $('#new_order_total').val(total.toFixed(2));
+}
+
+
+  $(document).ready(function () {
+    function toggleRequiredFields() {
+      if ($('#email_template').val() === '') {
+        // Si "Message personnalisé" est sélectionné → champs requis
+        $('#email_subject').attr('required', true);
+        $('#email_message').attr('required', true);
+      } else {
+        // Si un modèle est sélectionné → champs NON requis
+        $('#email_subject').removeAttr('required');
+        $('#email_message').removeAttr('required');
+      }
+    }
+
+    // Gérer le changement du select
+    $('#email_template').on('change', toggleRequiredFields);
+
+    // Initialiser l'état à l'ouverture
+    toggleRequiredFields();
+  });
 </script>
 </body>
 </html>
