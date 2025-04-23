@@ -330,8 +330,100 @@
     </div>
 </div>
 
-<!-- Send Email -->
-<div class="modal fade" id="send_email_modal">
+
+
+<!-- Client Orders Modal -->
+<div class="modal fade" id="client_orders">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Commandes du client</b></h4>
+            </div>
+            <div class="modal-body">
+                <div id="orders_list">
+                    <!-- Le contenu sera chargé dynamiquement -->
+                    <div class="text-center">
+                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                        <p>Chargement des commandes...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-close"></i> Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Order Modal -->
+<div class="modal fade" id="client_order_create">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Créer une nouvelle commande</b></h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" action="clients_create_order.php">
+                    <input type="hidden" id="new_order_client_id" name="client_id">
+                    
+                    <div class="form-group">
+                        <label for="new_order_oeuvre" class="col-sm-3 control-label">Œuvre</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="new_order_oeuvre" name="oeuvre_id" required>
+                                <option value="" selected disabled>- Sélectionner une œuvre -</option>
+                                <!-- Options chargées dynamiquement -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_order_prix" class="col-sm-3 control-label">Prix unitaire (€)</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="new_order_prix" name="prix" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_order_quantite" class="col-sm-3 control-label">Quantité</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="new_order_quantite" name="quantite" value="1" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_order_total" class="col-sm-3 control-label">Total (€)</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="new_order_total" name="total" readonly>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_order_statut" class="col-sm-3 control-label">Statut</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" id="new_order_statut" name="statut" required>
+                                <option value="En attente" selected>En attente</option>
+                                <option value="Confirmée">Confirmée</option>
+                                <option value="Expédiée">Expédiée</option>
+                                <option value="Livrée">Livrée</option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Annuler</button>
+                <button type="submit" class="btn btn-primary btn-flat" name="create_order"><i class="fa fa-save"></i> Créer la commande</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Send Email Modal -->
+<div class="modal fade" id="email_modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -341,31 +433,36 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="POST" action="clients_send_email.php">
-                    <input type="hidden" class="client-id" name="id">
+                    <input type="hidden" id="email_client_id" name="client_id">
+                    <input type="hidden" id="email_to_name" name="client_name">
+                    
                     <div class="form-group">
-                        <label for="email_to" class="col-sm-3 control-label">À</label>
+                        <label for="email_to" class="col-sm-3 control-label">Destinataire</label>
                         <div class="col-sm-9">
                             <input type="email" class="form-control" id="email_to" name="email_to" readonly>
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="email_subject" class="col-sm-3 control-label">Sujet</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="email_subject" name="email_subject" required>
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="email_template" class="col-sm-3 control-label">Modèle</label>
                         <div class="col-sm-9">
                             <select class="form-control" id="email_template" name="email_template">
-                                <option value="">Aucun (email personnalisé)</option>
+                                <option value="">Message personnalisé</option>
                                 <option value="welcome">Message de bienvenue</option>
                                 <option value="promo">Promotion spéciale</option>
-                                <option value="reminder">Rappel de panier abandonné</option>
+                                <option value="reminder">Rappel d'achat</option>
                                 <option value="feedback">Demande d'avis</option>
                             </select>
                         </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="email_message" class="col-sm-3 control-label">Message</label>
                         <div class="col-sm-9">
@@ -374,10 +471,12 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Fermer</button>
+                <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Annuler</button>
                 <button type="submit" class="btn btn-primary btn-flat" name="send_email"><i class="fa fa-envelope"></i> Envoyer</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
