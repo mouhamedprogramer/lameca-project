@@ -7,7 +7,7 @@
         $password = $_POST['password'];
 
 
-        $sql = "SELECT * FROM utilisateur WHERE email = ? and role = 'artisan'";
+        $sql = "SELECT * FROM utilisateur WHERE email = ? and role = 'Artisan'";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();

@@ -65,13 +65,13 @@
                   <?php
                     // Requête pour récupérer les commandes avec les informations associées
                     $sql = "SELECT c.idCommande, c.dateCommande, c.nombreArticles, c.statut, o.idArtisan,
-                            u.nom, AS nom_client, u.prenom AS prenom_client, 
+                            u.nom AS nom_client, u.prenom AS prenom_client, 
                             o.titre AS titre_oeuvre, o.prix AS prix_oeuvre 
                             FROM commande c 
                             LEFT JOIN client cl ON c.idClient = cl.idClient 
                             LEFT JOIN utilisateur u ON cl.idClient = u.idUtilisateur 
                             LEFT JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
-                            WHERE o.idArtisan = $_SESSION['artisan']
+                            WHERE o.idArtisan = {$_SESSION['artisan']}
                             ORDER BY c.dateCommande DESC";
                     $query = $conn->query($sql);
                     

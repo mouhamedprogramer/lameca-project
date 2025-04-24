@@ -45,20 +45,22 @@ $(function(){
 	}).parentsUntil(".sidebar-menu > .treeview-menu").addClass('active');
 
 });
-</script>
-<!-- Data Table Initialize -->
 <script>
   $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
+    if ($('#example1').length) {
+      $('#example1').DataTable();
+    }
+    if ($('#example2').length) {
+      $('#example2').DataTable({
+        'paging'      : true,
+        'lengthChange': false,
+        'searching'   : false,
+        'ordering'    : true,
+        'info'        : true,
+        'autoWidth'   : false
+      });
+    }
+  });
 </script>
 <!-- Date and Timepicker -->
 <script>
