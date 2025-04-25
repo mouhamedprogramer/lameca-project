@@ -4,6 +4,21 @@
     	header('location:home.php');
   	}
 ?>
+<style>
+    .sign-up a {
+        color: #3c8dbc ;
+        text-decoration: underline;
+        font-size: 1.1em;
+    }
+
+    .sign-up {
+        text-align: center;
+    }
+
+    .sign-up a:hover {
+        color: #367fa9 ;
+    }
+</style>
 <?php include 'includes/header.php'; ?>
 <body>
     <div class="login-container">
@@ -37,6 +52,9 @@
                         <button type="submit" class="btn btn-primary btn-block" name="login">
                             <i class="fa fa-sign-in"></i> Se connecter
                         </button>
+                    </div>
+                    <div class="sign-up">
+                        <a href="sign_up.php"> <span>S'inscrire</span></a>
                     </div>
                 </form>
                 
