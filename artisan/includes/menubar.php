@@ -18,7 +18,7 @@
       <li class="header">GERER</li>
       <li class=""><a href="profil.php"><span class="glyphicon glyphicon-lock"></span> <span>Profil</span></a></li>
       <li class=""><a href="commandes.php"><i class="glyphicon glyphicon-credit-card"></i> <span>Commandes</span></a></li>
-      <li class=""><a href="produits.php"><i class="fa fa-shopping-bag" aria-hidden="true"></i> <span>Produits</span></a></li>
+      <li class=""><a href="produits.php"><i class="fa fa-shopping-bag" aria-hidden="true"></i> <span>Mes oeuvres</span></a></li>
       <li class=""><a href="clients.php"><i class="fa fa-users"></i> <span>Clients</span></a></li>
 
     </ul>

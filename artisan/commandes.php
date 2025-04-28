@@ -104,8 +104,6 @@
                           <td><span class='label ".$status_class."'>".$row['statut']."</span></td>
                           <td>
                             <button class='btn btn-info btn-sm view btn-flat' data-id='".$row['idCommande']."'><i class='fa fa-eye'></i> Voir</button>
-                            <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['idCommande']."'><i class='fa fa-edit'></i> Modifier</button>
-                            <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['idCommande']."'><i class='fa fa-trash'></i> Supprimer</button>
                           </td>
                         </tr>
                       ";
