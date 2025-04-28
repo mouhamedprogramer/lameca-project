@@ -10,6 +10,7 @@ CREATE TABLE Utilisateur (
     ville VARCHAR(100),
     code_postal VARCHAR(20),
     date_naissance DATE,
+    photo VARCHAR(150),
     genre ENUM('Homme', 'Femme', 'Autre'),
     role ENUM('Admin', 'Artisan', 'Client') NOT NULL
 );
