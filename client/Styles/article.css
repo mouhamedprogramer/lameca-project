@@ -1,0 +1,72 @@
+.wrapper-rating {
+    font-size: 2em;
+    line-height: 0;
+    margin: 0;
+    --coulFillHover: #FD0;            /* couleur de fond au survol */
+    --coulFillSelected: #FD0;         /* couleur de fond selected */
+    --coulStrokeHover: #FD0;          /* couleur de bord au survol */
+    --coulStrokeSelected: #FD0;       /* couleur de bord selected */
+}
+.wrapper-rating label {
+    cursor: pointer;
+    border-bottom: 2px solid currentColor;
+}
+.wrapper-rating input {
+    position: absolute;
+    opacity: 0;
+}
+.wrapper-rating input:checked ~ * label {
+    --coulFillSelected: #FAFAFA;      /* couleur de fond par défaut */
+    --coulStrokeSelected: #000000;       /* couleur de bord par défaut */
+    border-bottom: 1px solid transparent;
+}
+.wrapper-rating .star {
+    display: inline-flex;
+    color: var(--coulStrokeSelected);
+    cursor: pointer;
+}
+.wrapper-rating .star svg {
+    width: 1em;
+    height: 1em;
+    transition: .25s;
+    stroke-width: 1;
+    stroke: var(--coulStrokeSelected);
+    fill: var(--coulFillSelected);
+}
+.wrapper-rating .star:hover > label svg {
+    fill: var(--coulFillHover);
+    stroke: var(--coulStrokeHover);
+}
+.rectangle {
+    width: 225px;
+    height: 200px;
+    border: 2px solid darkgrey;
+    padding: 10px
+
+}
+.align {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+.text-grey {
+    color: rgb(112, 112, 112);
+}
+.left {
+    text-align: left;
+}
+.comment {
+    border: 2px;
+    border-color: gray;
+    margin: 10px;
+    justify-content: space-between; 
+    align-items: center;
+}
+.button-blue {
+    background-color: #11314f;
+    color: white;
+}
+.body1 {
+    margin-top: 70px;
+    align-items: left;
+}
