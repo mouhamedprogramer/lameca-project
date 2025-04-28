@@ -674,22 +674,62 @@ $(function(){
   });
   
   // CALENDAR - Événements
-  var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth'
-    },
-    locale: 'fr',
-    initialView: 'dayGridMonth',
-    events: 'home_events_data.php',
-    eventClick: function(info) {
+// CALENDAR - Événements et commandes
+var calendarEl = document.getElementById('calendar');
+var calendar = new FullCalendar.Calendar(calendarEl, {
+  headerToolbar: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'dayGridMonth'
+  },
+  locale: 'fr',
+  initialView: 'dayGridMonth',
+  events: function(info, successCallback, failureCallback) {
+    // Récupérer les événements normaux
+    $.ajax({
+      url: 'home_events_data.php',
+      type: 'GET',
+      dataType: 'json',
+      success: function(eventsData) {
+        // Récupérer les dates de commande
+        $.ajax({
+          url: 'commande_dates.php',
+          type: 'GET',
+          dataType: 'json',
+          success: function(commandeData) {
+            // Combiner les deux types d'événements
+            successCallback(eventsData.concat(commandeData));
+          },
+          error: function() {
+            failureCallback();
+          }
+        });
+      },
+      error: function() {
+        failureCallback();
+      }
+    });
+  },
+  eventClick: function(info) {
+    // Différencier le comportement selon le type d'événement
+    if (info.event.extendedProps.type === 'commande') {
+      // Afficher une liste des commandes pour cette date
+      window.location.href = 'commandes.php?date=' + info.event.startStr;
+    } else {
       // Rediriger vers la page de détail de l'événement
       window.location.href = 'evenements.php?view=' + info.event.id;
     }
-  });
-  calendar.render();
+  },
+  eventContent: function(arg) {
+    // Personnaliser l'affichage des événements
+    if (arg.event.extendedProps.type === 'commande') {
+      return {
+        html: '<div class="fc-content"><span class="fc-title"><i class="fa fa-shopping-cart"></i> ' + arg.event.title + '</span></div>'
+      };
+    }
+  }
+});
+calendar.render();
 });
 </script>
 </body>
