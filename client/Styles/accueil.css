@@ -20,6 +20,7 @@ header {
     align-items: center;
     justify-content: center;
     position: absolute;
+    top: 0;
 }
 
 .navbar {
@@ -27,6 +28,7 @@ header {
     align-items: center; /* Centre tous les éléments verticalement */
     justify-content: space-between;
     width: 80vw;
+    top: 0;
 }
 
 .navbar .logo {
