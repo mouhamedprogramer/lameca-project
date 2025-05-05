@@ -64,7 +64,7 @@
                             u.nom, u.prenom, u.email, u.telephone, u.photo, u.date_naissance,
                             u.idUtilisateur, DATE(u.date_creation) as date_creation
                             FROM client c 
-                            LEFT JOIN utilisateur u ON c.idClient = u.idUtilisateur
+                            JOIN utilisateur u ON c.idClient = u.idUtilisateur
                             JOIN commande co ON u.idUtilisateur = co.idClient
                             JOIN oeuvre o ON co.idOeuvre = o.idOeuvre
                             WHERE o.idArtisan = {$_SESSION['artisan']}

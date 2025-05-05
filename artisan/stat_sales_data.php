@@ -17,8 +17,9 @@ for ($i = 5; $i >= 0; $i--) {
     
     // Nombre de ventes
     $sql = "SELECT COUNT(*) as count 
-            FROM commande 
-            WHERE dateCommande BETWEEN ? AND ?";
+            FROM commande c
+            JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+            WHERE o.idArtisan = {$_SESSION['artisan']} AND c.dateCommande BETWEEN ? AND ?";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $start_date, $end_date);
@@ -32,7 +33,7 @@ for ($i = 5; $i >= 0; $i--) {
     $sql = "SELECT SUM(o.prix * c.nombreArticles) as ca 
             FROM commande c 
             JOIN oeuvre o ON c.idOeuvre = o.idOeuvre 
-            WHERE c.dateCommande BETWEEN ? AND ?";
+            WHERE o.idArtisan = {$_SESSION['artisan']} AND c.dateCommande BETWEEN ? AND ? ";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $start_date, $end_date);

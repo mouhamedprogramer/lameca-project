@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Tableau de bord
+        Mes Statistiques
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Accueil</a></li>
-        <li class="active">Tableau de bord</li>
+        <li class="active">Statistiques</li>
       </ol>
     </section>
 
@@ -48,43 +48,39 @@
       <!-- Boîtes de statistiques principales -->
       <div class="row">
         <?php
-          // Nombre total d'utilisateurs par rôle
-          $sql = "SELECT COUNT(*) as total FROM client";
-          $query = $conn->query($sql);
-          $row = $query->fetch_assoc();
+          // Nombre total de clients
+          $sql = "SELECT COUNT(DISTINCT c.idClient) as total
+                  FROM client c
+                  JOIN utilisateur u ON c.idClient = u.idUtilisateur
+                  JOIN commande co ON u.idUtilisateur = co.idClient
+                  JOIN oeuvre o ON co.idOeuvre = o.idOeuvre
+                  WHERE o.idArtisan = ?";
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param("i", $_SESSION['artisan']);
+          $stmt->execute();
+          $result = $stmt->get_result();
+          $row = $result->fetch_assoc();
           $total_clients = $row['total'];
-          
-          $sql = "SELECT COUNT(*) as total FROM artisan WHERE statut_verification = 1";
-          $query = $conn->query($sql);
-          $row = $query->fetch_assoc();
-          $total_artisans_verifies = $row['total'];
-          
-          $sql = "SELECT COUNT(*) as total FROM artisan WHERE statut_verification = 0";
-          $query = $conn->query($sql);
-          $row = $query->fetch_assoc();
-          $total_artisans_en_attente = $row['total'];
-          
-          $sql = "SELECT COUNT(*) as total FROM administrateur";
-          $query = $conn->query($sql);
-          $row = $query->fetch_assoc();
-          $total_admins = $row['total'];
-          
-          // Nombre total d'œuvres
-          $sql = "SELECT COUNT(*) as total FROM oeuvre";
-          $query = $conn->query($sql);
-          $row = $query->fetch_assoc();
-          $total_oeuvres = $row['total'];
-          
-          // Nombre total de commandes
-          $sql = "SELECT COUNT(*) as total FROM commande";
+
+          //Nombre total de commandes
+          $sql = "SELECT COUNT(DISTINCT idCommande) as total FROM commande c
+                  JOIN oeuvre o ON c.idOeuvre=o.idOeuvre
+                  WHERE o.idArtisan = {$_SESSION['artisan']}";
           $query = $conn->query($sql);
           $row = $query->fetch_assoc();
           $total_commandes = $row['total'];
           
+          // Nombre total d'œuvres
+          $sql = "SELECT COUNT(*) as total FROM oeuvre WHERE idArtisan = {$_SESSION['artisan']}";
+          $query = $conn->query($sql);
+          $row = $query->fetch_assoc();
+          $total_oeuvres = $row['total'];
+          
           // Chiffre d'affaires total
           $sql = "SELECT SUM(o.prix * c.nombreArticles) as ca_total 
                   FROM commande c 
-                  JOIN oeuvre o ON c.idOeuvre = o.idOeuvre";
+                  JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+                  WHERE o.idArtisan = {$_SESSION['artisan']}";
           $query = $conn->query($sql);
           $row = $query->fetch_assoc();
           $ca_total = $row['ca_total'] ?? 0;
@@ -100,7 +96,7 @@
           <div class="small-box bg-aqua">
             <div class="inner">
               <h3><?php echo $total_clients; ?></h3>
-              <p>Clients inscrits</p>
+              <p>Nombre total de clients</p>
             </div>
             <div class="icon">
               <i class="fa fa-users"></i>
@@ -112,13 +108,13 @@
         <div class="col-lg-3 col-xs-6">
           <div class="small-box bg-green">
             <div class="inner">
-              <h3><?php echo $total_artisans_verifies; ?><sup style="font-size: 20px"> +<?php echo $total_artisans_en_attente; ?></sup></h3>
-              <p>Artisans (vérifiés + en attente)</p>
+              <h3><?php echo $total_commandes; ?></h3>
+              <p>Nombre total de commandes</p>
             </div>
             <div class="icon">
-              <i class="fa fa-paint-brush"></i>
+              <i class="fa fa-shopping-cart"></i>
             </div>
-            <a href="artisans.php" class="small-box-footer">Plus d'informations <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="commandes.php" class="small-box-footer">Plus d'informations <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         
@@ -131,7 +127,7 @@
             <div class="icon">
               <i class="fa fa-image"></i>
             </div>
-            <a href="oeuvres.php" class="small-box-footer">Plus d'informations <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="produits.php" class="small-box-footer">Plus d'informations <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         
@@ -179,7 +175,9 @@
               <?php
                 // Requête pour obtenir le nombre de commandes par statut
                 $sql = "SELECT statut, COUNT(*) as count 
-                        FROM commande 
+                        FROM commande c
+                        JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+                        WHERE o.idArtisan = {$_SESSION['artisan']}
                         GROUP BY statut 
                         ORDER BY FIELD(statut, 'En attente', 'Confirmée', 'Expédiée', 'Livrée')";
                 $query = $conn->query($sql);
@@ -201,73 +199,7 @@
         </div>
       </div>
       
-      <!-- Statistiques sur les utilisateurs et activité -->
-      <div class="row">
-        <div class="col-md-6">
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">Nouveaux utilisateurs (30 derniers jours)</h3>
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="box-body">
-              <?php
-                // Requête pour obtenir le nombre d'utilisateurs inscrits par jour sur les 30 derniers jours
-                $sql = "SELECT DATE(date_creation) as date, COUNT(*) as count 
-                        FROM utilisateur 
-                        WHERE date_creation >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) 
-                        GROUP BY DATE(date_creation) 
-                        ORDER BY date";
-                $query = $conn->query($sql);
-                $dates = [];
-                $user_counts = [];
-                
-                while($row = $query->fetch_assoc()){
-                    $dates[] = date('d/m', strtotime($row['date']));
-                    $user_counts[] = $row['count'];
-                }
-                
-                // Convertir en format JSON pour JavaScript
-                $dates_json = json_encode($dates);
-                $user_counts_json = json_encode($user_counts);
-              ?>
-              <canvas id="userChart" style="height:250px"></canvas>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-6">
-          <div class="box box-success">
-            <div class="box-header with-border">
-              <h3 class="box-title">Répartition des utilisateurs</h3>
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="box-body">
-              <?php
-                // Requête pour obtenir le nombre d'utilisateurs par rôle
-                $sql = "SELECT role, COUNT(*) as count FROM utilisateur GROUP BY role";
-                $query = $conn->query($sql);
-                $roles = [];
-                $role_counts = [];
-                
-                while($row = $query->fetch_assoc()){
-                    $roles[] = $row['role'];
-                    $role_counts[] = $row['count'];
-                }
-                
-                // Convertir en format JSON pour JavaScript
-                $roles_json = json_encode($roles);
-                $role_counts_json = json_encode($role_counts);
-              ?>
-              <canvas id="doughnutChart" style="height:250px"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-      
+          
       <!-- Top des œuvres et activité récente -->
       <div class="row">
         <div class="col-md-6">
@@ -298,7 +230,8 @@
                             FROM oeuvre o 
                             LEFT JOIN commande c ON o.idOeuvre = c.idOeuvre 
                             LEFT JOIN artisan a ON o.idArtisan = a.idArtisan 
-                            LEFT JOIN utilisateur u ON a.idArtisan = u.idUtilisateur 
+                            LEFT JOIN utilisateur u ON a.idArtisan = u.idUtilisateur
+                            WHERE o.idArtisan = {$_SESSION['artisan']}
                             GROUP BY o.idOeuvre 
                             ORDER BY nb_ventes DESC 
                             LIMIT 5";
@@ -374,27 +307,7 @@
                         ";
                       }
                       
-                      // Derniers utilisateurs inscrits
-                      $sql = "SELECT idUtilisateur, prenom, nom, role, date_creation 
-                              FROM utilisateur 
-                              ORDER BY date_creation DESC 
-                              LIMIT 3";
-                      $query = $conn->query($sql);
-                      
-                      while($row = $query->fetch_assoc()){
-                        $label_class = "label-info";
-                        if($row['role'] == 'Artisan') $label_class = "label-warning";
-                        if($row['role'] == 'Admin') $label_class = "label-danger";
-                        
-                        echo "
-                          <tr>
-                            <td><span class='label ".$label_class."'>Inscription</span></td>
-                            <td>".$row['prenom'].' '.$row['nom']." s'est inscrit en tant que ".$row['role']."</td>
-                            <td>".date('d/m/Y H:i', strtotime($row['date_creation']))."</td>
-                          </tr>
-                        ";
-                      }
-                      
+                                          
                       // Derniers avis
                       $sql = "SELECT ao.idAvis, ao.dateAvisoeuvre, ao.notation, 
                               u.prenom, u.nom, 
@@ -464,11 +377,14 @@
             </div>
             <div class="box-body">
               <?php
-                // Requête pour obtenir le nombre d'utilisateurs par pays
-                $sql = "SELECT pays, COUNT(*) as count 
-                        FROM utilisateur 
-                        WHERE pays IS NOT NULL AND pays != '' 
-                        GROUP BY pays 
+                // Requête pour obtenir le nombre de clients par pays
+                $sql = "SELECT u.pays, COUNT(*) as count 
+                        FROM utilisateur u
+                        JOIN client c ON c.idClient = u.idUtilisateur
+                        JOIN commande co ON u.idUtilisateur = co.idClient
+                        JOIN oeuvre o ON co.idOeuvre = o.idOeuvre
+                        WHERE u.pays IS NOT NULL AND u.pays != '' AND o.idArtisan = {$_SESSION['artisan']}
+                        GROUP BY u.pays 
                         ORDER BY count DESC";
                 $query = $conn->query($sql);
                 $pays = [];
@@ -594,56 +510,7 @@ $(function(){
     }
   });
 
-  // LINE CHART - Nouveaux utilisateurs
-  var userChartCanvas = document.getElementById('userChart').getContext('2d');
-  var userChart = new Chart(userChartCanvas, {
-    type: 'line',
-    data: {
-      labels: <?php echo $dates_json; ?>,
-      datasets: [
-        {
-          label: 'Nouveaux utilisateurs',
-          data: <?php echo $user_counts_json; ?>,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            precision: 0
-          }
-        }
-      }
-    }
-  });
-
-  // DOUGHNUT CHART - Répartition des utilisateurs
-  var doughnutChartCanvas = document.getElementById('doughnutChart').getContext('2d');
-  var doughnutChart = new Chart(doughnutChartCanvas, {
-    type: 'doughnut',
-    data: {
-      labels: <?php echo $roles_json; ?>,
-      datasets: [
-        {
-          data: <?php echo $role_counts_json; ?>,
-          backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
-  });
-  
-  // BAR CHART - Répartition géographique
+    // BAR CHART - Répartition géographique
   var worldMapCanvas = document.getElementById('worldMap').getContext('2d');
   var worldMap = new Chart(worldMapCanvas, {
     type: 'bar',
