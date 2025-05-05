@@ -25,7 +25,7 @@
                 // Stocker aussi le rôle pour les vérifications ultérieures
                 $_SESSION['role'] = $row['role'];
                 
-                header('location: home.php');
+                header('location: profil.php');
                 exit();
             }
             else{

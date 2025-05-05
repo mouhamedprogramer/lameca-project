@@ -1,6 +1,6 @@
 <header class="main-header">
   <!-- Logo -->
-  <a href="home.php" class="logo" style="background: rgb(0,120,150) !important;">
+  <a href="profil.php" class="logo" style="background: rgb(0,120,150) !important;">
     <!-- mini logo for sidebar mini 50x50 pixels -->
     <span class="logo-mini"><b>V</b>TS</span>
     <!-- logo for regular state and mobile devices -->
