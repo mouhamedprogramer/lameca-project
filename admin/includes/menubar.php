@@ -21,6 +21,9 @@
       <li class=""><a href="artisans.php"><i class="fa fa-tasks"></i> <span>Artisans</span></a></li>
       <li class=""><a href="clients.php"><i class="fa fa-black-tie"></i> <span>Clients</span></a></li>
       <li class=""><a href="commandes.php"><i class="fa fa-users"></i> <span>Commandes</span></a></li>
+      <li class=""><a href="evenements.php"><i class="fa fa-calendar"></i> <span>Événements</span></a></li>
+      <li class=""><a href="signalements.php"><i class="fa fa-flag"></i> <span>Signalements</span></a></li>
+
       
     </ul>
   </section>
