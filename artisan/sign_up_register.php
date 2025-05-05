@@ -1,7 +1,7 @@
 <?php
     include 'includes/session.php';
 
-    if(isset($_POST['add'])){
+    if(isset($_POST['inscription'])){
         // Informations utilisateur
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
@@ -18,7 +18,6 @@
         $specialite = $_POST['specialite'];
         $certification = $_POST['certification'];
         $portfolio = $_POST['portfolio'];
-        $statut = isset($_POST['statut']) ? 1 : 0;
         
         // Vérifier si l'email existe déjà
         $sql = "SELECT * FROM utilisateur WHERE email = ?";
@@ -59,7 +58,6 @@
                 $idUtilisateur = $conn->insert_id;
                 
                 // Insérer l'artisan
-                $statut = false ;
                 $sql = "INSERT INTO artisan (idArtisan, specialite, certification, portfolio, statut_verification) VALUES (?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("isssi", $idUtilisateur, $specialite, $certification, $portfolio, $statut);
@@ -80,5 +78,5 @@
         $_SESSION['error'] = 'Remplissez le formulaire d\'ajout en premier';
     }
 
-    header('location: artisans.php');
+    header('location: sign_up.php');
 ?>

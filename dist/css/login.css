@@ -182,6 +182,17 @@
     border: 1px solid #f5c6cb;
 }
 
+.sign-up a {
+    color: #3c8dbc;
+    text-decoration: underline;
+}
+
+.sign-up a:hover {
+    color: #367fa9;
+}
+
+
+
 /* Responsive design */
 @media (max-width: 992px) {
     .login-container {
