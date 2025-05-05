@@ -1,0 +1,31 @@
+{
+    "carData": {
+        "carId": "833e8460-91bc-439b-a070-4f3740bf5795",
+        "model": "Audi",
+        "color": "Noir",
+        "timestamp": [
+            2025,
+            1,
+            26,
+            18,
+            55,
+            41,
+            983177200
+        ],
+        "location": "Bordeaux"
+    },
+    "speedData": {
+        "carId": "8549c9b0-60ec-4b24-9b9e-30ff1ec23d07",
+        "speed": 129.1945966852735,
+        "timestamp": [
+            2025,
+            1,
+            26,
+            18,
+            55,
+            42,
+            190225100
+        ]
+    },
+    "speedingViolation": true
+}

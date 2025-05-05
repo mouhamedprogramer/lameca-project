@@ -1,0 +1,213 @@
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+.login-image {
+    flex: 1;
+    background-image: url('../images/artisan-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.login-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.login-image-overlay h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.login-image-overlay p {
+    font-size: 1.2em;
+    max-width: 80%;
+    line-height: 1.6;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.login-form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo b {
+    font-size: 2.5em;
+    color: #3c8dbc;
+}
+
+.login-box-msg {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #777;
+    font-size: 1.1em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    height: 45px;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #3c8dbc;
+    border: none;
+    height: 45px;
+    border-radius: 4px;
+    font-size: 1.1em;
+    font-weight: 600;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #367fa9;
+}
+
+.or-divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.or-divider:before, .or-divider:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.or-divider:before {
+    left: 0;
+}
+
+.or-divider:after {
+    right: 0;
+}
+
+.or-divider span {
+    background-color: white;
+    padding: 0 10px;
+    position: relative;
+    color: #777;
+}
+
+.social-login {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.social-btn {
+    flex: 1;
+    margin: 0 5px;
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-google {
+    background-color: #DB4437;
+}
+
+.btn-apple {
+    background-color: #000;
+}
+
+.btn-instagram {
+    background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.callout {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.callout-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.sign-up a {
+    color: #3c8dbc;
+    text-decoration: underline;
+}
+
+.sign-up a:hover {
+    color: #367fa9;
+}
+
+
+
+/* Responsive design */
+@media (max-width: 992px) {
+    .login-container {
+        flex-direction: column;
+    }
+    
+    .login-image {
+        height: 250px;
+    }
+    
+    .login-image-overlay h1 {
+        font-size: 2em;
+    }
+    
+    .login-image-overlay p {
+        font-size: 1em;
+    }
+}
