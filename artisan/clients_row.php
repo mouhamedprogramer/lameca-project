@@ -20,7 +20,11 @@
 		
 		// Récupérer les statistiques du client
 		// Nombre de commandes
-		$sql = "SELECT COUNT(*) as nb_commandes FROM commande WHERE idClient = ?";
+		$sql = "SELECT COUNT(*) as nb_commandes FROM commande c
+                INNER JOIN client cl ON c.idClient = cl.idClient
+                INNER JOIN utilisateur u ON cl.idClient = u.idUtilisateur
+                INNER JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+                WHERE o.idArtisan = {$_SESSION['artisan']} AND c.idClient = ?";
 		$stmt = $conn->prepare($sql);
 		$stmt->bind_param("i", $id);
 		$stmt->execute();
@@ -31,8 +35,10 @@
 		// Total dépensé
 		$sql = "SELECT SUM(o.prix * c.nombreArticles) as total_depense 
 				FROM commande c 
-				JOIN oeuvre o ON c.idOeuvre = o.idOeuvre 
-				WHERE c.idClient = ?";
+				JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+				JOIN client cl ON c.idClient = cl.idClient
+                JOIN utilisateur u ON cl.idClient = u.idUtilisateur
+				WHERE o.idArtisan = {$_SESSION['artisan']} AND c.idClient = ?";
 		$stmt = $conn->prepare($sql);
 		$stmt->bind_param("i", $id);
 		$stmt->execute();
@@ -42,8 +48,11 @@
 		
 		// Date de la dernière commande
 		$sql = "SELECT dateCommande as derniere_commande 
-				FROM commande 
-				WHERE idClient = ? 
+				FROM commande c
+				JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+				JOIN client cl ON c.idClient = cl.idClient
+                JOIN utilisateur u ON cl.idClient = u.idUtilisateur
+				WHERE o.idArtisan = {$_SESSION['artisan']} AND c.idClient = ? 
 				ORDER BY dateCommande DESC 
 				LIMIT 1";
 		$stmt = $conn->prepare($sql);

@@ -70,12 +70,16 @@
                             WHERE o.idArtisan = {$_SESSION['artisan']}
                             ORDER BY u.nom ASC, u.prenom ASC";
                     $query = $conn->query($sql);
-
+                    
                     while($row = $query->fetch_assoc()){
                       $photo = (!empty($row['photo'])) ? '../images/'.$row['photo'] : '../images/profile.jpg';
                       
                       // Compter le nombre de commandes
-                      $sqlCount = "SELECT COUNT(*) as nb_commandes FROM commande WHERE idClient = ?";
+                      $sqlCount = "SELECT COUNT(*) as nb_commandes FROM commande c
+                                   INNER JOIN client cl ON c.idClient = cl.idClient
+                                   INNER JOIN utilisateur u ON cl.idClient = u.idUtilisateur
+                                   INNER JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+                                   WHERE o.idArtisan = {$_SESSION['artisan']} AND c.idClient = ?";
                       $stmtCount = $conn->prepare($sqlCount);
                       $stmtCount->bind_param("i", $row['idClient']);
                       $stmtCount->execute();
@@ -108,8 +112,11 @@
           </div>
         </div>
       </div>
-    </div>
 
+      
+      
+    </section>   
+  </div>
     
   <?php include 'includes/footer.php'; ?>
   <?php include 'includes/clients_modal.php'; ?>
@@ -141,22 +148,32 @@ $(function(){
     var table = $('#example1').DataTable();
   }
   
+  // Filtrage personnalisé
+  $('#filter_type').change(function(){
+    var filter = $(this).val();
+    
+    if(filter === 'all') {
+      table.search('').columns().search('').draw();
+    }
+    else if(filter === 'date_recent') {
+      // Trier par date d'inscription (plus récente d'abord)
+      table.order([5, 'desc']).draw();
+    }
+    else if(filter === 'date_oldest') {
+      // Trier par date d'inscription (plus ancienne d'abord)
+      table.order([5, 'asc']).draw();
+    }
+    else if(filter === 'active_orders') {
+      // Filtrer ceux qui ont des commandes
+      table.column(6).search('1|2|3|4|5|6|7|8|9', true, false).draw();
+    }
+    else if(filter === 'no_orders') {
+      // Filtrer ceux qui n'ont pas de commandes
+      table.column(6).search('^0$', true, false).draw();
+    }
+  });
   
   // Actions des boutons
-  $(document).on('click', '.edit', function(e){
-    e.preventDefault();
-    $('#edit').modal('show');
-    var id = $(this).data('id');
-    getRow(id);
-  });
-
-  $(document).on('click', '.delete', function(e){
-    e.preventDefault();
-    $('#delete').modal('show');
-    var id = $(this).data('id');
-    getRow(id);
-  });
-  
   $(document).on('click', '.view', function(e){
     e.preventDefault();
     $('#view').modal('show');
@@ -286,6 +303,92 @@ function getClientOrders(id){
     }
   });
 }
+
+
+$(document).on('click', '#send_email', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  var clientEmail = $('#view_email').text();
+  var clientName = $('#view_nom').text();
+  
+  $('#email_modal').modal('show');
+  $('#email_client_id').val(clientId);
+  $('#email_to').val(clientEmail);
+  $('#email_to_name').val(clientName);
+});
+
+$(document).on('click', '#export_data', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  window.location.href = 'clients_export.php?id=' + clientId;
+});
+
+$(document).on('click', '#view_orders', function(e) {
+  e.preventDefault();
+  var clientId = $('.client-id').val();
+  $('#client_orders').modal('show');
+  getClientOrders(clientId);
+});
+
+// Pour l'édition depuis la vue détaillée
+$(document).on('click', '.edit-from-view', function(e) {
+  e.preventDefault();
+  $('#view').modal('hide');
+  setTimeout(function() {
+    $('#edit').modal('show');
+  }, 500);
+});
+
+// Pour changer le prix lorsqu'une œuvre est sélectionnée
+$(document).on('change', '#new_order_oeuvre', function() {
+  var oeuvreId = $(this).val();
+  if (oeuvreId) {
+    $.ajax({
+      type: 'POST',
+      url: 'clients_get_oeuvre_prix.php',
+      data: {oeuvre_id: oeuvreId},
+      dataType: 'json',
+      success: function(response) {
+        $('#new_order_prix').val(response.prix);
+        updateTotal();
+      }
+    });
+  }
+});
+
+// Pour mettre à jour le total lors du changement de quantité
+$(document).on('input', '#new_order_quantite', function() {
+  updateTotal();
+});
+
+// Fonction pour mettre à jour le total
+function updateTotal() {
+  var prix = parseFloat($('#new_order_prix').val()) || 0;
+  var quantite = parseInt($('#new_order_quantite').val()) || 0;
+  var total = prix * quantite;
+  $('#new_order_total').val(total.toFixed(2));
+}
+
+
+  $(document).ready(function () {
+    function toggleRequiredFields() {
+      if ($('#email_template').val() === '') {
+        // Si "Message personnalisé" est sélectionné → champs requis
+        $('#email_subject').attr('required', true);
+        $('#email_message').attr('required', true);
+      } else {
+        // Si un modèle est sélectionné → champs NON requis
+        $('#email_subject').removeAttr('required');
+        $('#email_message').removeAttr('required');
+      }
+    }
+
+    // Gérer le changement du select
+    $('#email_template').on('change', toggleRequiredFields);
+
+    // Initialiser l'état à l'ouverture
+    toggleRequiredFields();
+  });
 </script>
 </body>
 </html>
