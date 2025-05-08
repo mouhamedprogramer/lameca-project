@@ -9,11 +9,25 @@ $sql_oeuvres = "SELECT o.*, a.idArtisan, u.nom as artisan_nom, u.prenom as artis
                 LEFT JOIN utilisateur u ON a.idArtisan = u.idUtilisateur 
                 WHERE o.disponibilite = TRUE 
                 ORDER BY o.prix DESC 
-                LIMIT 6";
+                LIMIT 9";
 $result_oeuvres = $conn->query($sql_oeuvres);
 $oeuvres = [];
 if ($result_oeuvres->num_rows > 0) {
     while($row = $result_oeuvres->fetch_assoc()) {
+        // Récupérer la première photo de l'œuvre
+        $sql_photo = "SELECT url FROM photooeuvre WHERE idOeuvre = ? ORDER BY idPhoto ASC LIMIT 1";
+        $stmt = $conn->prepare($sql_photo);
+        $stmt->bind_param("i", $row['idOeuvre']);
+        $stmt->execute();
+        $result_photo = $stmt->get_result();
+        
+        if ($result_photo->num_rows > 0) {
+            $photo = $result_photo->fetch_assoc();
+            $row['photo_url'] = $photo['url'];
+        } else {
+            $row['photo_url'] = null;
+        }
+        
         $oeuvres[] = $row;
     }
 }
@@ -55,109 +69,76 @@ function formaterPrix($prix) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artisano - Découvrez l'art authentique</title>
-    <!-- Font Awesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- CSS personnalisé -->
-    <link rel="stylesheet" href="css/modern.css">
-</head>
-<body>
-    <header>
-        <nav class="navbar">
-            <div class="logo-container">
-                <a href="index.php">
-                    <img src="Images/Logo.png" alt="Logo Artisano" class="logo">
-                </a>
-            </div>
-            <div class="nav-toggle">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="nav-links">
-                <ul>
-                    <li><a href="index.php" class="active">Accueil</a></li>
-                    <li><a href="artisans.php">Artisans</a></li>
-                    <li><a href="oeuvres.php">Œuvres</a></li>
-                    <li><a href="evenements.php">Événements</a></li>
-                    <li><a href="galerie.php">Galerie Virtuelle</a></li>
-                    <li><a href="FAQ.php">FAQ</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                </ul>
-            </div>
-            <div class="user-actions">
-                <a href="wishlist.php" class="icon-link" title="Liste de souhaits">
-                    <i class="far fa-heart"></i>
-                </a>
-                <a href="panier.php" class="icon-link" title="Panier">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="badge" id="cart-count">0</span>
-                </a>
-                <a href="messages.php" class="icon-link" title="Messages">
-                    <i class="far fa-envelope"></i>
-                </a>
-                <a href="connexion.php" class="icon-link" title="Mon compte">
-                    <i class="far fa-user"></i>
-                </a>
-            </div>
-        </nav>
-    </header>
+<?php include 'includes/header.php'; ?>
 
     <main>
+    <section class="hero-section">
+    <div class="hero-slider" style=" height: 500px;">
+        <div class="slides">
+            <div class="slide active" style="background-image: url('../images/art/1.jpeg'); height: 700px;">
+            </div>
+            <div class="slide" style="background-image: url('../images/art/3.jpeg'); height: 700px;">
+            </div>
+            <div class="slide" style="background-image: url('../images/art/wp8898536.jpg'); height: 700px;">
+            </div>
+        </div>
+        <div class="slider-controls">
+            <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
+            <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="slider-dots"></div>
+    </div>
+</section>
+
+
         
 
-        <!-- Section des œuvres -->
-        <section class="section oeuvres-section">
-            <div class="section-header">
-                <h2>Œuvres exclusives</h2>
-                <p>Découvrez nos pièces les plus prestigieuses</p>
-            </div>
-            <div class="oeuvres-grid">
-                <?php if (count($oeuvres) > 0): ?>
-                    <?php foreach ($oeuvres as $oeuvre): ?>
-                        <div class="oeuvre-card">
-                            <div class="oeuvre-image">
-                                <?php 
-                                $image = !empty($oeuvre['image']) ? 'Images/oeuvres/' . $oeuvre['image'] : 'Images/oeuvre-placeholder.jpg';
-                                ?>
-                                <img src="<?php echo $image; ?>" alt="<?php echo htmlspecialchars($oeuvre['titre']); ?>">
-                                <div class="oeuvre-actions">
-                                    <button class="action-btn wishlist-btn" data-id="<?php echo $oeuvre['idOeuvre']; ?>">
-                                        <i class="far fa-heart"></i>
-                                    </button>
-                                    <button class="action-btn cart-btn" data-id="<?php echo $oeuvre['idOeuvre']; ?>">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="oeuvre-details">
-                                <h3><?php echo htmlspecialchars($oeuvre['titre']); ?></h3>
-                                <p class="oeuvre-artisan">Par <?php echo htmlspecialchars($oeuvre['artisan_prenom'] . ' ' . $oeuvre['artisan_nom']); ?></p>
-                                <p class="oeuvre-description"><?php echo htmlspecialchars(substr($oeuvre['description'], 0, 100)) . (strlen($oeuvre['description']) > 100 ? '...' : ''); ?></p>
-                                <div class="oeuvre-footer">
-                                    <span class="oeuvre-prix"><?php echo formaterPrix($oeuvre['prix']); ?></span>
-                                    <a href="oeuvre-details.php?id=<?php echo $oeuvre['idOeuvre']; ?>" class="btn-secondary">Voir détails</a>
-                                </div>
-                            </div>
+       <!-- Section des œuvres -->
+<section class="section oeuvres-section">
+    <div class="section-header">
+        <h2>Œuvres exclusives</h2>
+        <p>Découvrez nos pièces les plus prestigieuses</p>
+    </div>
+    <div class="oeuvres-grid">
+        <?php if (count($oeuvres) > 0): ?>
+            <?php foreach ($oeuvres as $oeuvre): ?>
+                <div class="oeuvre-card">
+                    <div class="oeuvre-image">
+                        <?php 
+                        // Corriger le chemin vers les images d'œuvres
+                        $image = !empty($oeuvre['photo_url']) ? '../' . $oeuvre['photo_url'] : '../images/oeuvre-placeholder.jpg';
+                        ?>
+                        <img src="<?php echo $image; ?>" alt="<?php echo htmlspecialchars($oeuvre['titre']); ?>">
+                        <div class="oeuvre-actions">
+                            <button class="action-btn wishlist-btn" data-id="<?php echo $oeuvre['idOeuvre']; ?>">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="action-btn cart-btn" data-id="<?php echo $oeuvre['idOeuvre']; ?>">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="no-results">
-                        <p>Aucune œuvre disponible pour le moment.</p>
                     </div>
-                <?php endif; ?>
+                    <div class="oeuvre-details">
+                        <h3><?php echo htmlspecialchars($oeuvre['titre']); ?></h3>
+                        <p class="oeuvre-artisan">Par <?php echo htmlspecialchars($oeuvre['artisan_prenom'] . ' ' . $oeuvre['artisan_nom']); ?></p>
+                        <p class="oeuvre-description"><?php echo htmlspecialchars(substr($oeuvre['description'], 0, 100)) . (strlen($oeuvre['description']) > 100 ? '...' : ''); ?></p>
+                        <div class="oeuvre-footer">
+                            <span class="oeuvre-prix"><?php echo formaterPrix($oeuvre['prix']); ?></span>
+                            <a href="oeuvre-details.php?id=<?php echo $oeuvre['idOeuvre']; ?>" class="btn-secondary">Voir détails</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="no-results">
+                <p>Aucune œuvre disponible pour le moment.</p>
             </div>
-            <div class="section-footer">
-                <a href="oeuvres.php" class="btn-outline">Voir toutes les œuvres</a>
-            </div>
-        </section>
+        <?php endif; ?>
+    </div>
+    <div class="section-footer">
+        <a href="oeuvres.php" class="btn-outline">Voir toutes les œuvres</a>
+    </div>
+</section>
 
         <!-- Section des artisans -->
         <section class="section artisans-section">
@@ -171,9 +152,10 @@ function formaterPrix($prix) {
                         <div class="artisan-card">
                             <div class="artisan-image">
                                 <?php 
-                                $photo = !empty($artisan['photo']) ? 'Images/' . $artisan['photo'] : 'Images/profile-placeholder.jpg';
+                                // Corriger le chemin vers les photos des artisans
+                                $image_artisan = !empty($artisan['photo']) ? '../images/' . $artisan['photo'] : '../images/user-placeholder.png';
                                 ?>
-                                <img src="<?php echo $photo; ?>" alt="<?php echo htmlspecialchars($artisan['prenom'] . ' ' . $artisan['nom']); ?>">
+                                <img src="<?php echo $image_artisan; ?>" alt="<?php echo htmlspecialchars($artisan['prenom'] . ' ' . $artisan['nom']); ?>">
                             </div>
                             <div class="artisan-details">
                                 <h3><?php echo htmlspecialchars($artisan['prenom'] . ' ' . $artisan['nom']); ?></h3>
@@ -242,64 +224,13 @@ function formaterPrix($prix) {
                 </form>
             </div>
         </section>
+       
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="Images/Logo.png" alt="Logo Artisano" class="logo">
-                <p>Artisano - La place de marché pour l'art authentique et le savoir-faire artisanal.</p>
-            </div>
-            
-            <div class="footer-links">
-                <div class="footer-column">
-                    <h3>Navigation</h3>
-                    <ul>
-                        <li><a href="index.php">Accueil</a></li>
-                        <li><a href="artisans.php">Artisans</a></li>
-                        <li><a href="oeuvres.php">Œuvres</a></li>
-                        <li><a href="evenements.php">Événements</a></li>
-                        <li><a href="galerie.php">Galerie Virtuelle</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Informations</h3>
-                    <ul>
-                        <li><a href="a-propos.php">À propos</a></li>
-                        <li><a href="FAQ.php">FAQ</a></li>
-                        <li><a href="contact.php">Contact</a></li>
-                        <li><a href="mentions-legales.php">Mentions Légales</a></li>
-                        <li><a href="politique-confidentialite.php">Politique de confidentialité</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> 123 Rue de l'Art, 75000 Paris</li>
-                        <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
-                        <li><i class="fas fa-envelope"></i> contact@artisano.fr</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-social">
-                <h3>Suivez-nous</h3>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; <?php echo date('Y'); ?> Artisano. Tous droits réservés. Réalisé par LAMECA.</p>
-        </div>
-    </footer>
+    <!-- Footer -->
+    <?php
+    require_once 'includes/footer.php';
+    ?>
 
     <!-- JavaScript -->
     <script src="js/main.js"></script>
