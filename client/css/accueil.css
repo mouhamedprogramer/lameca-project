@@ -1,0 +1,180 @@
+* {
+
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}/*Enlève les paramètres par défaut des navigateurs*/
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    align-items: center;
+}
+
+header {
+    height: 10vh;
+    min-height: 10vh;
+    width: 100vw;
+    background-color: #11314f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+}
+
+.navbar {
+    display: flex;
+    align-items: center; /* Centre tous les éléments verticalement */
+    justify-content: space-between;
+    width: 80vw;
+    top: 0;
+}
+
+.navbar .logo {
+    border-radius: 5px;
+}
+
+a {
+    color:white;
+    font-size: 16px;
+    transition: transform 0.2s ease-in-out;
+    display: inline-block;
+}
+
+a:hover{
+    transform: scale(1.2);
+}
+
+.navbar .nav-link ul {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .nav-link li {
+    margin: 15px;
+}
+
+.navbar img {
+    height: auto; 
+    max-height: 50px;
+}
+
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    margin-top: 12vh;
+}
+
+.bandeau{
+    position: relative;
+    display: inline-block;
+}
+
+.bandeau img{
+    width: 100vw;
+    height: auto;
+    display: block;
+}
+
+.bandeau .titre{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    color:white;
+    backdrop-filter: blur(5px);
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    font-variant: small-caps;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.oeuvres{
+    margin:5vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.uneOeuvre img{
+    width: 30vh;
+    max-width: 40vh;
+    background-color: bisque;
+}
+
+.uneOeuvre{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+
+.uneOeuvre .legende{
+    margin-top: 20px;
+    width: 30vh;
+}
+
+footer {
+    height: 20vh;
+    min-height: 20vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    background-color: #11314f;
+    display: flex;
+    flex-direction:row;
+    margin-top: auto;
+
+}
+
+.sectionLogo img{
+    border-radius: 10px;
+}
+
+.sectionLogo{
+    padding:30px;
+}
+
+.partie1{
+    padding: 30px;
+}
+
+.partie1 a{
+    color:white;
+}
+
+
+.partie2{
+    padding: 30px;
+}
+
+.partie2 li{
+    padding: 5px;
+}
+
+.partie1 li{
+    padding: 5px;
+}
+
+.partie2 a{
+    color:white;
+}
+
+.reseau ul{
+    display: flex;
+}
+
+.reseau li{
+    margin: 5px;
+}

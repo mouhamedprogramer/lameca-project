@@ -932,6 +932,16 @@
 
 
 
+  .user-info span {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: none;
+    text-overflow: ellipsis;
+}
+
+.navbar .nav-links a {
+  white-space: nowrap;
+}
 
 
 

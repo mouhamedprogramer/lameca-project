@@ -190,8 +190,8 @@ $pageTitle = htmlspecialchars($oeuvre['titre']) . " - Artisano";
                 <div class="artisan-info">
                     <div class="artisan-photo">
                         <?php
-                        $artisan_photo = !empty($oeuvre['artisan_photo']) ? '../    ' . $oeuvre['artisan_photo'] : '../images/profile-placeholder.jpg';
-                        ?>
+$artisan_photo = !empty($oeuvre['artisan_photo']) ? '../images/' . $oeuvre['artisan_photo'] : '../images/profile-placeholder.jpg';
+?>
                         <img src="<?php echo $artisan_photo; ?>" alt="<?php echo htmlspecialchars($oeuvre['artisan_prenom'] . ' ' . $oeuvre['artisan_nom']); ?>">
                     </div>
                     <div>
