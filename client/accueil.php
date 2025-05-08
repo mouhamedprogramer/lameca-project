@@ -73,13 +73,13 @@ function formaterPrix($prix) {
 
     <main>
     <section class="hero-section">
-    <div class="hero-slider" style=" height: 500px;">
+    <div class="hero-slider" style=" height: 450px;">
         <div class="slides">
-            <div class="slide active" style="background-image: url('../images/art/1.jpeg'); height: 700px;">
+            <div class="slide active" style="background-image: url('../images/art/1.jpeg'); height: 600px;">
             </div>
-            <div class="slide" style="background-image: url('../images/art/3.jpeg'); height: 700px;">
+            <div class="slide" style="background-image: url('../images/art/3.jpeg'); height: 600px;">
             </div>
-            <div class="slide" style="background-image: url('../images/art/wp8898536.jpg'); height: 700px;">
+            <div class="slide" style="background-image: url('../images/art/wp8898536.jpg'); height: 600px;">
             </div>
         </div>
         <div class="slider-controls">

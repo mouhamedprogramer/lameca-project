@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="remember">
                 <a href="#">Mot de passe oublié</a>
             </div>
-            <p>Vous n'avez pas de compte ? <a href="#">Inscrivez-vous</a></p>
+            <p>Vous n'avez pas de compte ? <a href="inscription.php">Inscrivez-vous</a></p>
         </div>
 
         <div class="image">

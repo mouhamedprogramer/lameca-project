@@ -9,7 +9,7 @@
                 <div class="footer-column">
                     <h3>Navigation</h3>
                     <ul>
-                        <li><a href="index.php">Accueil</a></li>
+                        <li><a href="accueil.php">Accueil</a></li>
                         <li><a href="artisans.php">Artisans</a></li>
                         <li><a href="oeuvres.php">Œuvres</a></li>
                         <li><a href="evenements.php">Événements</a></li>
