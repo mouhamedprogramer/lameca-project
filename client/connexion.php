@@ -57,11 +57,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <h2>Connexion</h2>
             <?php if (isset($erreur)) echo "<p style='color:red;'>$erreur</p>"; ?>
             <form class="form-connexion" method="POST" action="">
-                <label class="connexion-label" for="mail">Adresse mail</label><br>
-                <input class="connexion-input" type="text" id="mail" name="mail" placeholder="example@gmail.com" required><br><br>
+                <label class="connexion-label" for="mail">Adresse mail</label>
+                <input class="connexion-input" type="text" id="mail" name="mail" placeholder="example@gmail.com" required><br>
 
-                <label class="connexion-label" for="password">Mot de passe</label><br>
-                <input class="connexion-input" type="password" id="password" name="password" placeholder="@#%" required><br><br>
+                <label class="connexion-label" for="password">Mot de passe</label>
+                <input class="connexion-input" type="password" id="password" name="password" placeholder="@#%" required><br>
 
                 <button type="submit">Envoyer</button><br>
             </form>
