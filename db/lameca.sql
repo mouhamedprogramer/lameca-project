@@ -47,6 +47,13 @@ CREATE TABLE Oeuvre (
     FOREIGN KEY (idArtisan) REFERENCES Artisan(idArtisan)
 );
 
+CREATE TABLE Photooeuvre (
+    idPhoto INT PRIMARY KEY AUTO_INCREMENT,
+    url VARCHAR(500) NOT NULL,
+    idOeuvre INT,
+    FOREIGN KEY (idOeuvre) REFERENCES Oeuvre(idOeuvre) ON DELETE CASCADE
+);
+
 CREATE TABLE Commande (
     idCommande INT PRIMARY KEY AUTO_INCREMENT,
     nombreArticles INT NOT NULL,
