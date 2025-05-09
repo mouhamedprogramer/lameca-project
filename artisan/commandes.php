@@ -76,6 +76,30 @@
                       $prix_total = $row['nombreArticles'] * $row['prix_oeuvre'];
                       $status_class = '';
                       
+                                            
+                      echo "
+                        <tr>
+                          <td class='hidden'>".$row['idCommande']."</td>
+                          <td>".date('d/m/Y à H:i', strtotime($row['dateCommande']))."</td>
+                          <td>".$row['prenom_client'].' '.$row['nom_client']."</td>
+                          <td>".$row['titre_oeuvre']."</td>
+                          <td>".number_format($row['prix_oeuvre'], 2, ',', ' ')." €</td>
+                          <td>".$row['nombreArticles']."</td>
+                          <td>".number_format($prix_total, 2, ',', ' ')." €</td>
+                          <td>
+                            <select class='form-control statut-select' data-id='".$row['idCommande']."'>
+                              <option value='En attente' ".($row['statut']=='En attente'?'selected':'').">En attente</option>
+                              <option value='Confirmée' ".($row['statut']=='Confirmée'?'selected':'').">Confirmée</option>
+                              <option value='Expédiée' ".($row['statut']=='Expédiée'?'selected':'').">Expédiée</option>
+                              <option value='Livrée' ".($row['statut']=='Livrée'?'selected':'').">Livrée</option>
+                            </select>
+                          </td>
+                          <td>
+                            <button class='btn btn-info btn-sm view btn-flat' data-id='".$row['idCommande']."'><i class='fa fa-eye'></i> Voir</button>
+                          </td>
+                        </tr>
+                      ";
+
                       // Définir la classe CSS en fonction du statut
                       switch($row['statut']) {
                         case 'En attente':
@@ -91,22 +115,6 @@
                           $status_class = 'label-success';
                           break;
                       }
-                      
-                      echo "
-                        <tr>
-                          <td class='hidden'>".$row['idCommande']."</td>
-                          <td>".date('d/m/Y à H:i', strtotime($row['dateCommande']))."</td>
-                          <td>".$row['prenom_client'].' '.$row['nom_client']."</td>
-                          <td>".$row['titre_oeuvre']."</td>
-                          <td>".number_format($row['prix_oeuvre'], 2, ',', ' ')." €</td>
-                          <td>".$row['nombreArticles']."</td>
-                          <td>".number_format($prix_total, 2, ',', ' ')." €</td>
-                          <td><span class='label ".$status_class."'>".$row['statut']."</span></td>
-                          <td>
-                            <button class='btn btn-info btn-sm view btn-flat' data-id='".$row['idCommande']."'><i class='fa fa-eye'></i> Voir</button>
-                          </td>
-                        </tr>
-                      ";
                     }
                   ?>
                 </tbody>
@@ -176,6 +184,30 @@ $(function(){
   $('#edit_quantite').on('input', function(){
     calculerTotal('edit');
   });
+
+
+  //Envoie d'une requête AJAX pour mettre à jour le statut de la commande dans la BDD
+  $(document).on('change', '.statut-select', function() {
+  var idCommande = $(this).data('id');
+  var nouveauStatut = $(this).val();
+
+  $.ajax({
+    type: 'POST',
+    url: 'commandes_update_statut.php',
+    data: {
+      idCommande: idCommande,
+      statut: nouveauStatut
+    },
+    success: function(response){
+      // Afficher une alerte si succès
+      console.log('Statut mis à jour avec succès.');
+    },
+    error: function(){
+      // Afficher une alerte si erreur
+      alert("Erreur lors de la mise à jour du statut.");
+    }
+  });
+});
 });
 
 // Fonction pour récupérer les œuvres disponibles pour un client
