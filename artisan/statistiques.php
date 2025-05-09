@@ -292,7 +292,9 @@
                               u.prenom, u.nom 
                               FROM commande c 
                               JOIN client cl ON c.idClient = cl.idClient 
-                              JOIN utilisateur u ON cl.idClient = u.idUtilisateur 
+                              JOIN utilisateur u ON cl.idClient = u.idUtilisateur
+                              JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+                              WHERE O.idArtisan = {$_SESSION['artisan']}
                               ORDER BY c.dateCommande DESC 
                               LIMIT 3";
                       $query = $conn->query($sql);
