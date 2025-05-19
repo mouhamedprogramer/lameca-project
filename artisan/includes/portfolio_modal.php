@@ -3,10 +3,10 @@
     <div class="modal-content">
       <form id="portfolioForm" method="POST" action="portfolio_update.php">
         <div class="modal-header">
-          <h3 class="modal-title" id="modifierModalLabel">Modifier votre texte de présentation</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
             <span aria-hidden="true">&times;</span>
           </button>
+          <h3 class="modal-title" id="modifierModalLabel">Modifier votre texte de présentation</h3>
         </div>
         <div class="modal-body">
           <textarea name="portfolio" id="portfolioText" class="form-control" rows="5" required></textarea>

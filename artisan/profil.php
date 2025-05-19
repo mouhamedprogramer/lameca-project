@@ -40,6 +40,66 @@
   text-align: left !important;
 }
 
+.full-box-btn {
+  display: flex;                /* Flex pour centrer contenu */
+  justify-content: center;      /* Centrage horizontal */
+  align-items: center;          /* Centrage vertical */
+  height: 100px;                /* Hauteur du rectangle */
+  width: 100%;                  /* Prend toute la largeur du parent */
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: white;
+  font-weight: 700;
+  font-size: 1.25em;
+  border-radius: 12px;
+  text-decoration: none;        /* Enlève le soulignement */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-blue {
+  background: linear-gradient(135deg, #00C0EF,rgb(3, 137, 171));
+}
+
+.btn-blue:hover {
+  box-shadow: 0 20px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg,rgb(21, 147, 179),rgb(3, 107, 133));
+  cursor: pointer;
+  color: white;
+}
+
+.btn-green {
+  background: linear-gradient(135deg, #00A65A,rgb(1, 108, 60));
+}
+
+.btn-green:hover {
+  box-shadow: 0 20px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg,rgb(12, 141, 83),rgb(1, 97, 54));
+  cursor: pointer;
+  color: white;
+}
+
+.btn-orange {
+  background: linear-gradient(135deg, #F39C12,rgb(169, 115, 29));
+}
+
+.btn-orange:hover {
+  box-shadow: 0 20px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg,rgb(196, 126, 13),rgb(174, 112, 11));
+  cursor: pointer;
+  color: white;
+}
+
+.btn-red {
+  background: linear-gradient(135deg, #DD4B39,rgb(172, 42, 25));
+}
+
+.btn-red:hover {
+  box-shadow: 0 20px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg,rgb(191, 55, 37),rgb(165, 30, 13));
+  cursor: pointer;
+  color: white;
+}
+
 </style>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -141,6 +201,8 @@
           </div>
         </div>
       </div>
+
+     <!--Section du portfolio--> 
       <div class="row">
         <div class="col-xs-12">
           <div class="box box-info box-header with-border">
@@ -180,6 +242,22 @@
           </div>
         </div>
       </div>
+
+      <!--Section de navigation rapide-->
+
+      <div class="col-lg-3 col-xs-6">
+        <a href="produits.php" class="full-box-btn btn-blue"><i class="fa fa-paint-brush"></i>&nbsp;Mes Oeuvres</a>
+      </div>
+      <div class="col-lg-3 col-xs-6">
+        <a href="commandes.php" class="full-box-btn btn-green"><i class="fa fa-shopping-cart"></i>&nbsp;Mes commandes</a>
+      </div>
+      <div class="col-lg-3 col-xs-6">
+        <a href="evenement.php" class="full-box-btn btn-orange"><i class="fa fa-calendar-plus-o"></i>&nbsp;Créer un événement</a>
+      </div>
+      <div class="col-lg-3 col-xs-6">
+        <a href="statistiques.php" class="full-box-btn btn-red"><i class="fa fa-line-chart"></i>&nbsp;Mes statistiques</a>
+      </div>
+      
     </section>   
   </div>
     
