@@ -1,19 +1,66 @@
 <?php include 'includes/session.php';?>
 <?php include 'includes/header.php';?>
+<style>
+
+.circular-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.premier-element {
+  border-collapse: separate !important;
+  border-spacing: 90px 90px;
+}
+
+.premier-element td, 
+.premier-element th {
+  padding: 15px 40px;
+}
+
+.nom {
+  color: #3c8dbc;
+  font-weight: bold;
+  font-size:50px;
+}
+
+.specialite {
+  color: gray;
+  font-style: italic;
+  font-size:25px;
+}
+
+.infos {
+  color: gray;
+  font-size:15px;
+}
+
+.align-gauche {
+  text-align: left !important;
+}
+
+</style>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    <?php include 'includes/navbar.php'; ?>
-    <?php include 'includes/menubar.php'; ?>
+
+  <?php include 'includes/navbar.php'; ?>
+  <?php include 'includes/menubar.php'; ?>
+  <?php include 'includes/portfolio_modal.php'; ?>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>
-            Votre Profil Artisan
-        </h1>
-        <ol class="breadcrumb">
-            <li><a href="profil.php"><i class="fa fa-dashboard"></i>Accueil</a></li>
-            <li class="active">Mon espace Artisan</li>
-        </ol>
+      <h1>
+        Votre profil artisan
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="profil.php"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Commandes</li>
+      </ol>
     </section>
-    <!--Main content-->
+    <!-- Main content -->
     <section class="content">
       <?php
         if(isset($_SESSION['error'])){
@@ -40,65 +87,87 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
-            <div class="box-body">
-              <table id="example1" class="table table-bordered">
-                <thead>
-                  <th class="hidden"></th>
-                  <th>Date</th>
-                  <th>Client</th>
-                  <th>Œuvre</th>
-                  <th>Prix</th>
-                  <th>Quantité</th>
-                  <th>Total</th>
-                  <th>Statut</th>
-                  <th>Actions</th>
-                </thead>
-                <tbody>
+            <div style="display: flex; justify-content: left;">
+              <table class="table" style="width: auto;">
+              <tbody>
                   <?php
-                    // Requête pour récupérer les commandes avec les informations associées
-                    $sql = "SELECT c.idCommande, c.dateCommande, c.nombreArticles, c.statut, o.idArtisan,
-                            u.nom AS nom_client, u.prenom AS prenom_client, 
-                            o.titre AS titre_oeuvre, o.prix AS prix_oeuvre 
-                            FROM commande c 
-                            LEFT JOIN client cl ON c.idClient = cl.idClient 
-                            LEFT JOIN utilisateur u ON cl.idClient = u.idUtilisateur 
-                            LEFT JOIN oeuvre o ON c.idOeuvre = o.idOeuvre
+                    // Requête pour récupérer les œuvres avec les informations de l'artisan
+                    $sql = "SELECT u.telephone AS tel, u.email AS mail, u.date_naissance AS date_naissance, o.idArtisan,
+                            u.nom AS nom_artisan, u.prenom AS prenom_artisan, a.specialite AS specialite
+                            FROM oeuvre o 
+                            LEFT JOIN artisan a ON o.idArtisan = a.idArtisan 
+                            LEFT JOIN utilisateur u ON a.idArtisan = u.idUtilisateur
                             WHERE o.idArtisan = {$_SESSION['artisan']}
-                            ORDER BY c.dateCommande DESC";
+                            ORDER BY o.datePublication DESC";
                     $query = $conn->query($sql);
                     
-                    while($row = $query->fetch_assoc()){
-                      $prix_total = $row['nombreArticles'] * $row['prix_oeuvre'];
-                      $status_class = '';
+                    $row = $query->fetch_assoc();
                       
-                      // Définir la classe CSS en fonction du statut
-                      switch($row['statut']) {
-                        case 'En attente':
-                          $status_class = 'label-warning';
-                          break;
-                        case 'Confirmée':
-                          $status_class = 'label-primary';
-                          break;
-                        case 'Expédiée':
-                          $status_class = 'label-info';
-                          break;
-                        case 'Livrée':
-                          $status_class = 'label-success';
-                          break;
-                      }
+                    // Requête pour récupérer la photo de l'artisan
+                    $sql = "SELECT u.photo AS photo_profil FROM utilisateur u 
+                            JOIN artisan a ON u.idUtilisateur = a.idArtisan 
+                            WHERE a.idArtisan = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $row['idArtisan']);  // Utilisez idArtisan ici
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+
+                    $img_url = '';
+                    if ($result->num_rows > 0) {
+                      $photo = $result->fetch_assoc();
+                    // Construire l'URL de l'image en supposant que la photo est dans le répertoire images/
+                      $img_url = '../images/' . $photo['photo_profil'];  // Exemple : ../images/ma_photo.jpg
+                    } else {
+                      $img_url = '../images/oeuvre_default.jpg';  // Image par défaut
+                    }
                       
+                    echo "
+                      <tr>
+                        <td><img src='".$img_url."' width='200px' height='200px' class='circular-img'></td>
+                        <td>
+                          <span class='nom'>".$row['nom_artisan']." ".$row['prenom_artisan']."</span><br>
+                          <span class='specialite'>".$row['specialite']."</span><br><br>
+                          <span class='infos'><i class='fa fa-phone'></i> Numéro de téléphone : ".$row['tel']."</span><br>
+                          <span class='infos'><i class='fa fa-envelope'></i> Mail : ".$row['mail']."</span><br>
+                        </td>
+                        
+                      </tr>
+                    ";
+                  ?>
+                </tbody>
+              </table>
+                                    
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-info box-header with-border">
+            <h4 class="box-title"> Description de votre profil Artisan</h4>
+            <div style="justify-content: left;">
+              <table class="table" style="width: auto;">
+                <tbody>
+                  <?php
+                    //Requête pour récupérer le portefolio de l'Artisan
+                    $sql = "SELECT portfolio, idArtisan FROM artisan WHERE idArtisan = {$_SESSION['artisan']}";
+                    $result = $conn->query($sql);
+                    if ($result && $portfolio = $result->fetch_assoc()) {
                       echo "
                         <tr>
-                          <td class='hidden'>".$row['idCommande']."</td>
-                          <td>".date('d/m/Y à H:i', strtotime($row['dateCommande']))."</td>
-                          <td>".$row['prenom_client'].' '.$row['nom_client']."</td>
-                          <td>".$row['titre_oeuvre']."</td>
-                          <td>".number_format($row['prix_oeuvre'], 2, ',', ' ')." €</td>
-                          <td>".$row['nombreArticles']."</td>
-                          <td>".number_format($prix_total, 2, ',', ' ')." €</td>
-                          <td><span class='label ".$status_class."'>".$row['statut']."</span></td>
                           <td>
-                            <button class='btn btn-info btn-sm view btn-flat' data-id='".$row['idCommande']."'><i class='fa fa-eye'></i> Voir</button>
+                            " . $portfolio['portfolio'] . "
+                          </td>
+                          <td class='align-gauche'>
+                            <button class='btn btn-success btn-sm edit btn-flat' data-id='".$portfolio['idArtisan']."' data-portfolio='".htmlspecialchars($portfolio['portfolio'], ENT_QUOTES)."'data-toggle='modal' data-target='#modifierModal'>Modifier</button>
+                          </td>
+                        </tr>
+                      ";
+                    } else {
+                      echo "
+                        <tr>
+                          <td>
+                            Aucun portefolio trouvé.
                           </td>
                         </tr>
                       ";
@@ -106,69 +175,29 @@
                   ?>
                 </tbody>
               </table>
+                                    
             </div>
           </div>
         </div>
       </div>
-    </section>
-    <section class="content">
-        <?php
-            if(isset($_SESSION['error'])){
-                echo "
-                <div class='alert alert-danger alert-dismissible'>
-                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-                    <h4><i class='icon fa fa-warning'></i> Erreur!</h4>
-                    ".$_SESSION['error']."
-                </div>";
-                unset($_SESSION['error']);
-            }
-            if(isset($_SESSION['success'])){
-                echo "
-                  <div class='alert alert-success alert-dismissible'>
-                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-                    <h4><i class='icon fa fa-check'></i> Succès!</h4>
-                    ".$_SESSION['success']."
-                  </div>
-                ";
-                unset($_SESSION['success']);
-            }
-        ?>
-
-        <!--Boîtes de profil principale-->
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Votre profil Artisan</h3>
-                    </div>
-                    <div class="box-body col-xs-12">
-                        <div class="table-responsive">
-                            <?php
-                                // Récupérer les informations de l'Artisan
-                                $sql = "SELECT idArtisan, specialite, nom, prenom, email, telephone, adresse, pays, ville, code_postal, date_naissance, photo
-                                        FROM artisan
-                                        JOIN utilisateur ON idArtisan=idUtilisateur
-                                        WHERE idArtisan={$_SESSION['artisan']}";
-                                $stmt = $conn->prepare($sql);
-                                $stmt->execute();
-                                $query = $stmt->get_result();
-                                $row = $query->fetch_assoc();
-
-                                echo "
-                                    <tr>
-                                    </tr>"
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-                  
-    </section>
-
-    <?php include 'includes/footer.php'; ?>
-  
+    </section>   
+  </div>
+    
+  <?php include 'includes/footer.php'; ?>
 </div>
 <?php include 'includes/scripts.php'; ?>
+<script>
+$(document).ready(function(){
+  $('#modifierModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Bouton cliqué
+    var portfolio = button.data('portfolio');
+    var id = button.data('id');
+
+    // Injecter les données dans la modale
+    $('#portfolioText').val(portfolio);
+    $('#idArtisan').val(id);
+  });
+});
+</script>
 </body>
 </html>
