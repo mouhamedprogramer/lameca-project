@@ -146,15 +146,6 @@ CREATE TABLE FAQ (
     reponse TEXT NOT NULL
 );
 
-
-
-
-
-
-
-
-
-
 -- Ajouter un champ date_creation à la table Utilisateur s'il n'existe pas déjà
 ALTER TABLE Utilisateur 
 ADD COLUMN date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
