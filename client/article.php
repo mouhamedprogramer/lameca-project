@@ -1,6 +1,17 @@
 <?php
 // Connexion à la base de données
 require_once 'includes/conn.php';
+
+// Requête pour récupérer une question
+$sql_commentaires = "SELECT `id`, `nom`, `prenom`, `email`, `message`, `note`, `date` FROM `commentaires`"; // ou autre critère
+$result_commentaires = $conn->query($sql_commentaires);
+//$faq = $result_faq->fetch();
+$commentaires = [];
+if ($result_commentaires->num_rows > 0) {
+    while($row = $result_commentaires->fetch_assoc()) {
+        $commentaires[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,13 +74,13 @@ require_once 'includes/conn.php';
         
         <!-- Section deprésentation de l'œuvre d'art -->
         <section id="prestentation_article" class="align">
-        <div>
+        <div class="gauche">
             <img src="Images/article1.jpg" alt="photo de l'article : un vase">
         </div>
-        <div>
+        <div class="droite ma-div">
             <h2>Cercle de Terre</h2>
             <p class="big-price">122€</p>
-            <p class="text-grey">Idéal pour vos soupes, céréales ou boissons chaudes. Durable, passe au lave vaisselle et au micro-ondes. Une touche artisanale pour embellir votre quotidien !</p>
+            <p class="text-grey">Idéal pour vos soupes, céréales ou boissons chaudes. Durable, passe au lave vaisselle et au micro-ondes. Une touche artisanale pour embellir votre quotidien au quotidien !</p>
             <br>
             <button class="basket">Ajouter au panier</button>
             <br><br>
@@ -81,11 +92,51 @@ require_once 'includes/conn.php';
         </div>
     </section>
 
+    <!-- Section titre commentaires -->
+    <section>
+        <h2 class="latest-reviews">Derniers commentaires</h2>
+    </section>
+
+    <!-- Section voir les commentaires -->
+    
+    <section class="rereviews">
+        <?php foreach ($commentaires as $row): ?>
+            <div class="card">
+            <div class="stars">
+            <?php
+                // Récupérer la note de chaque commentaire
+                $note = intval($row['note']); // Assurer que la note est un entier
+                // Affichage des étoiles pour chaque commentaire
+                // Afficher les étoiles pleines
+                for ($i = 0; $i < $note; $i++) {
+                    echo '★ ';
+                }
+                // Afficher les étoiles vides
+                for ($i = $note; $i < 5; $i++) {
+                    echo '☆ ';
+                }
+                ?>
+            </div>
+            <h3><?= htmlspecialchars($row['prenom']) ?> <?= htmlspecialchars($row['nom']) ?></h3>
+            <p><?= nl2br(htmlspecialchars($row['message'])) ?></p>
+            <div class="reviewer">
+                <img src="https://i.pravatar.cc/40" alt="Reviewer">
+                <div>
+                <span><?= htmlspecialchars($row['email']) ?></span><br>
+                <small><?= $row['date'] ?></small>
+                </div>
+            </div>
+            </div>
+        <?php endforeach; ?>
+
+        
+    </section>
+
     <!-- Section ajout d'un commentaire avec un formulaire -->
-    <section id="commentaire">
+    <section class="comment-center" id="commentaire">
         <fieldset>
-            <form class="form1" action="../Dynamique/commentaire.php" method="post">
-                <h3 class="title1">Avis</h3><br>
+            <form class="form1" action="commentaire.php" method="post">
+                <h3>Ajouter un commentaire</h3><br>
                 <label for="nom">Nom</label><br>
                 <input type="text" id="nom" name="nom" required placeholder="Value"><br>
                 <label for="prenom">Prénom</label><br>
@@ -128,10 +179,7 @@ require_once 'includes/conn.php';
         ?>
     </section>
 
-    <!-- Section titre - voir les commentaires -->
-    <section>
-        <h2 class="latest-reviews">Derniers commentaires</h2>
-    </section>
+
 
     <!-- Section donner une note aux commentaires -->
     <section id="note">

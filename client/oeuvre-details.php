@@ -65,6 +65,7 @@ $pageTitle = htmlspecialchars($oeuvre['titre']) . " - Artisano";
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- CSS personnalisé -->
     <link rel="stylesheet" href="css/modern.css">
+    <link rel="stylesheet" href="css/detail-oeuvre.css">
     <!-- CSS spécifique pour la galerie d'images -->
     <style>
         .oeuvre-gallery {

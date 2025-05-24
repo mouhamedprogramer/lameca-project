@@ -130,9 +130,7 @@
 <?php include 'includes/scripts.php'; ?>
 <script>
 $(function(){
-  // Initialiser le DataTable
   if (!$.fn.DataTable.isDataTable('#example1')) {
-    // Initialiser le DataTable seulement si ce n'est pas déjà fait
     $('#example1').DataTable({
       responsive: true,
       "order": [[ 2, "asc" ]] // Trier par nom

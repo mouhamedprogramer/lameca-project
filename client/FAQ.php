@@ -1,7 +1,19 @@
 <?php
 // Connexion à la base de données
 require_once 'includes/conn.php';
+
+// Requête pour récupérer une question
+$sql_faq = "SELECT question, reponse FROM faq"; // ou autre critère
+$result_faq = $conn->query($sql_faq);
+//$faq = $result_faq->fetch();
+$faq = [];
+if ($result_faq->num_rows > 0) {
+    while($row = $result_faq->fetch_assoc()) {
+        $faq[] = $row;
+    }
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -65,51 +77,21 @@ require_once 'includes/conn.php';
         <section class="section oeuvres-section">
                 <div class="section-header">
                     <h2>FAQ</h2>
-                    <p>Bienvenue dans la Foire Aux Questions !</p>
+                    <p>Les questions récurentes</p>
                 </div>
         </section>
 
         <br>
         <!-- Menu déroulant FAQ -->
-        <details>
-            <summary><b>Question 1 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum..</p>
-        </details>
-        
-        <details>
-            <summary><b>Question 2 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
+        <!-- Affiche toutes les questions présentent dans la base de donnée à la suite, grae à deux lignes de commandes -->
+        <?php foreach ($faq as $row): ?>
+            <details>
+                <summary><b><?= htmlspecialchars($row['question']) ?></b></summary>
+                <p><?= nl2br(htmlspecialchars($row['reponse'])) ?></p>
+            </details>
+            
+        <?php endforeach; ?>
 
-        <details>
-            <summary><b>Question 3 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
-
-        <details>
-            <summary><b>Question 4 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
-
-        <details>
-            <summary><b>Question 5 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
-
-        <details>
-            <summary><b>Question 6 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
-
-        <details>
-            <summary><b>Question 7 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
-
-        <details>
-            <summary><b>Question 8 : Cur rosae rubrae sunt ?</b></summary>
-            <p>Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.</p>
-        </details>
         
     </main>
 
