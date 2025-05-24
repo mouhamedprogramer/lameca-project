@@ -1,0 +1,567 @@
+/* Styles pour la page du panier */
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Panier vide */
+.empty-cart {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.empty-cart-icon {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 30px;
+}
+
+.empty-cart h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.empty-cart p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* Contenu du panier */
+.cart-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+@media (max-width: 968px) {
+    .cart-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+/* Articles du panier */
+.cart-items {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 120px 1fr auto auto auto;
+    gap: 20px;
+    align-items: center;
+    padding: 25px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item:hover {
+    background: #fafafa;
+    border-radius: 15px;
+    padding: 25px 15px;
+}
+
+/* Image de l'article */
+.item-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Détails de l'article */
+.item-details {
+    min-width: 0; /* Pour permettre le text-overflow */
+}
+
+.item-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.item-artisan {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.item-description {
+    color: #888;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Contrôles de quantité */
+.item-quantity {
+    text-align: center;
+}
+
+.item-quantity label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.qty-btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: #4a90e2;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    background: #357abd;
+    transform: scale(1.1);
+}
+
+.qty-input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Prix de l'article */
+.item-price {
+    text-align: right;
+}
+
+.unit-price {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.total-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #27ae60;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Actions de l'article */
+.item-actions {
+    text-align: center;
+}
+
+.btn-remove {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-remove:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+}
+
+/* Résumé du panier */
+.cart-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.summary-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.summary-line span:first-child {
+    color: #666;
+}
+
+.summary-line span:last-child {
+    font-weight: 600;
+    color: #333;
+}
+
+.total-line {
+    border-top: 2px solid #f0f0f0;
+    padding-top: 15px;
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+.total-line span {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.total-line span:last-child {
+    color: #27ae60;
+    font-size: 1.4rem;
+}
+
+/* Actions du résumé */
+.summary-actions {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.checkout-btn {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+}
+
+/* Section promo */
+.promo-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    border: 2px dashed #ddd;
+}
+
+.promo-section h4 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.promo-input {
+    display: flex;
+    gap: 10px;
+}
+
+.promo-input input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+.promo-input input:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+/* Boutons généraux */
+.btn-primary,
+.btn-outline,
+.btn-secondary {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+}
+
+.btn-outline {
+    background: white;
+    color: #666;
+    border: 2px solid #e9ecef;
+}
+
+.btn-outline:hover {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #333;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .page-header h1 {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cart-item {
+        grid-template-columns: 80px 1fr;
+        grid-template-rows: auto auto auto auto;
+        gap: 15px;
+        padding: 20px 0;
+    }
+    
+    .cart-item:hover {
+        padding: 20px 10px;
+    }
+    
+    .item-image {
+        width: 80px;
+        height: 80px;
+        grid-row: 1 / 3;
+    }
+    
+    .item-details {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    
+    .item-quantity {
+        grid-column: 1 / 3;
+        grid-row: 3;
+        text-align: left;
+    }
+    
+    .quantity-controls {
+        justify-content: flex-start;
+        width: fit-content;
+    }
+    
+    .item-price {
+        grid-column: 2;
+        grid-row: 2;
+        text-align: left;
+        align-self: end;
+    }
+    
+    .item-actions {
+        grid-column: 1 / 3;
+        grid-row: 4;
+        text-align: left;
+    }
+    
+    .cart-items {
+        padding: 20px;
+    }
+    
+    .summary-card {
+        padding: 25px;
+        position: static;
+    }
+    
+    .summary-actions {
+        flex-direction: column-reverse;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        margin: 10px;
+        padding: 30px 20px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .cart-items,
+    .summary-card {
+        margin: 0 10px;
+        padding: 20px 15px;
+    }
+    
+    .item-title {
+        font-size: 1.1rem;
+    }
+    
+    .item-artisan,
+    .item-description {
+        font-size: 0.85rem;
+    }
+    
+    .promo-input {
+        flex-direction: column;
+    }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-item {
+    animation: slideIn 0.5s ease forwards;
+}
+
+.cart-item:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.cart-item:nth-child(3n) {
+    animation-delay: 0.2s;
+}
+
+/* États de chargement */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.updating {
+    position: relative;
+}
+
+.updating::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.updating::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #4a90e2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

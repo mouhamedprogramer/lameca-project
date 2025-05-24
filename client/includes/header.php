@@ -13,7 +13,11 @@
     <!-- CSS personnalisé -->
     
     <link rel="stylesheet" href="css/modern.css">
+    <link rel="stylesheet" href="css/detail-oeuvre">
     <script src="js/modern.js" defer></script>
+
+    
+
 </head>
 <body>
 <?php
@@ -98,7 +102,7 @@ if ($estClient && isset($conn)) {
             <ul>
                 <li><a href="accueil.php" class="active">Accueil</a></li>
                 <li><a href="artisans.php">Artisans</a></li>
-                <li><a href="# ">Œuvres</a></li>
+                <li><a href="oeuvres.php ">Œuvres</a></li>
                 <li><a href="evenements.php">Événements</a></li>
                 <li><a href="galerie.php">Galerie Virtuelle</a></li>
                 <li><a href="FAQ.php">FAQ</a></li>
