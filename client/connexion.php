@@ -1,3 +1,38 @@
+<?php
+session_start();
+require_once 'includes/conn.php';
+
+// Traitement du formulaire AVANT d'inclure le header
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = trim($_POST['mail']);
+    $password = trim($_POST['password']);
+
+    $stmt = $conn->prepare("SELECT idUtilisateur, nom, prenom, mot_de_passe, role FROM Utilisateur WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($idUtilisateur, $nom, $prenom, $hashedPassword, $role);
+
+    if ($stmt->fetch()) {
+        if (password_verify($password, $hashedPassword) && $role === 'Client') {
+            $_SESSION['idUtilisateur'] = $idUtilisateur;
+            $_SESSION['nomUtilisateur'] = $nom;
+            $_SESSION['prenomUtilisateur'] = $prenom;
+            $_SESSION['role'] = $role;
+            header("Location: accueil.php");
+            exit();
+        } else {
+            $erreur = "Mot de passe incorrect ou rôle invalide.";
+        }
+    } else {
+        $erreur = "Aucun utilisateur trouvé avec cet email.";
+    }
+
+    $stmt->close();
+}
+
+// Inclure le header APRÈS le traitement
+require_once 'includes/header.php';
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,39 +52,6 @@
 
 </head>
 
-<?php
-session_start();
-require_once 'includes/conn.php';
-require_once 'includes/header.php';
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST['mail']);
-    $password = trim($_POST['password']);
-
-    $stmt = $conn->prepare("SELECT idUtilisateur, nom, prenom, mot_de_passe, role FROM Utilisateur WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($idUtilisateur, $nom, $prenom, $hashedPassword, $role);
-
-    if ($stmt->fetch()) {
-        if (password_verify($password, $hashedPassword) && $role === 'Client') {
-            $_SESSION['idUtilisateur'] = $idUtilisateur;
-            $_SESSION['nomUtilisateur'] = $nom;
-            $_SESSION['prenomUtilisateur'] = $prenom;
-            $_SESSION['role'] = $role;
-
-            header("Location: accueil.php");
-            exit();
-        } else {
-            $erreur = "Mot de passe incorrect ou rôle invalide.";
-        }
-    } else {
-        $erreur = "Aucun utilisateur trouvé avec cet email.";
-    }
-
-    $stmt->close();
-}
-?>
 
 <main>
     <section class="ModuleConnexion">

@@ -285,6 +285,70 @@ WHERE ce.date_inscription IS NULL;
 
 
 
+DROP TABLE IF EXISTS wishlist;
+CREATE TABLE wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idClient INT NOT NULL,
+    idOeuvre INT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idClient) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (idOeuvre) REFERENCES Oeuvre(idOeuvre) ON DELETE CASCADE,
+    UNIQUE KEY unique_wishlist (idClient, idOeuvre),
+    INDEX idx_client (idClient),
+    INDEX idx_oeuvre (idOeuvre)
+);e
+
+
+
+
+
+
+
+
+
+-- Table pour la liste de souhaits (wishlist)
+CREATE TABLE IF NOT EXISTS wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idClient INT NOT NULL,
+    idOeuvre INT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idClient) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (idOeuvre) REFERENCES Oeuvre(idOeuvre) ON DELETE CASCADE,
+    UNIQUE KEY unique_wishlist (idClient, idOeuvre),
+    INDEX idx_client (idClient),
+    INDEX idx_oeuvre (idOeuvre),
+    INDEX idx_date_ajout (date_ajout)
+);
+
+-- Insérer quelques données de test (optionnel)
+-- Remplacez les IDs par des IDs valides de votre base de données
+INSERT IGNORE INTO wishlist (idClient, idOeuvre) VALUES 
+(1, 1),  -- Client 1 aime l'œuvre 1
+(1, 3),  -- Client 1 aime l'œuvre 3
+(2, 1),  -- Client 2 aime l'œuvre 1
+(2, 2);  -- Client 2 aime l'œuvre 2
+
+-- Index pour optimiser les performances
+CREATE INDEX idx_wishlist_client_date ON wishlist(idClient, date_ajout DESC);
+
+-- Vue pour les statistiques de la wishlist
+CREATE OR REPLACE VIEW wishlist_stats AS
+SELECT 
+    w.idClient,
+    COUNT(*) as total_favoris,
+    SUM(o.prix) as valeur_totale,
+    AVG(o.prix) as prix_moyen,
+    MAX(w.date_ajout) as derniere_ajout,
+    MIN(w.date_ajout) as premiere_ajout
+FROM wishlist w
+JOIN Oeuvre o ON w.idOeuvre = o.idOeuvre
+WHERE o.disponibilite = TRUE
+GROUP BY w.idClient;
+
+
+
+
+
 
 
 
