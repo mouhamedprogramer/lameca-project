@@ -165,7 +165,7 @@ $navPages = [
     'oeuvres' => ['url' => 'oeuvres.php', 'label' => 'Œuvres', 'icon' => 'fas fa-palette'],
     'evenements' => ['url' => 'evenements.php', 'label' => 'Événements', 'icon' => 'fas fa-calendar-alt'],
     'galerie' => ['url' => 'galerie.php', 'label' => 'Galerie Virtuelle', 'icon' => 'fas fa-images'],
-    'faq' => ['url' => 'faq.php', 'label' => 'faq', 'icon' => 'fas fa-question-circle'],
+    'faq' => ['url' => 'faq.php', 'label' => 'FAQ', 'icon' => 'fas fa-question-circle'],
     'contact' => ['url' => 'contact.php', 'label' => 'Contact', 'icon' => 'fas fa-envelope']
 ];
 ?>
