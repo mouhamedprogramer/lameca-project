@@ -1,0 +1,296 @@
+/* ==================================================================
+   NAVBAR MODERNE - STYLES AMÉLIORÉS (VERSION FIXÉE PROPRE)
+   ================================================================== */
+
+/* Header moderne - VERSION FIXÉE */
+.modern-header {
+    position: fixed; /* FIXÉ */
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-header.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modern-header.hidden {
+    transform: translateY(-100%);
+}
+
+/* Compensation pour la navbar fixée */
+body {
+    padding-top: 75px;
+    transition: padding-top 0.3s ease;
+}
+
+/* Ajustements responsive pour la compensation */
+@media screen and (max-width: 1440px) {
+    body {
+        padding-top: 70px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    body {
+        padding-top: 75px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        padding-top: 60px;
+    }
+}
+
+/* Navbar moderne */
+.modern-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 75px;
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* Logo amélioré */
+.logo-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    min-width: 180px;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+    transform: scale(1.02);
+}
+
+.logo {
+    height: 45px;
+    width: auto;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #2c3e50, #e74c3c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+    display: block;
+    white-space: nowrap;
+}
+
+/* Navigation moderne */
+.modern-nav-links {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+    max-width: calc(100vw - 500px);
+    overflow: hidden;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.nav-menu::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-item {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 25px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: fit-content;
+    background: rgba(44, 62, 80, 0.03);
+    border: 1px solid rgba(44, 62, 80, 0.08);
+}
+
+.nav-link i {
+    font-size: 15px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.nav-link span {
+    font-size: 14px;
+    white-space: nowrap;
+    display: block;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+    border-radius: 25px;
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+    left: 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.25);
+    border-color: transparent;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    border-color: transparent;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    animation: activeIndicator 2s ease-in-out infinite;
+}
+
+@keyframes activeIndicator {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.2);
+        opacity: 0.7;
+    }
+}
+
+/* Actions utilisateur modernes */
+.modern-user-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+    min-width: fit-content;
+}
+
+.icon-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: #2c3e50;
+    text-decoration: none;
+    border-radius: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(44, 62, 80, 0.05);
+    border: 1px solid rgba(44, 62, 80, 0.1);
+    flex-shrink: 0;
+}
+
+.icon-link:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.25);
+}
+
+.icon-link i {
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.icon-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Effets spéciaux pour chaque type de lien */
+.wishlist-link:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+    box-shadow: 0 12px 30px rgba(231, 76, 60, 0.3) !important;
+}
+
+.cart-link:hover {
+    background: linear-gradient(135deg, #27ae60, #229954) !important;
+    box-shadow: 0 12px 30px rgba(39, 174, 96, 0.3) !important;
+}
+
+.favorites-link:hover {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad) !important;
+    box-shadow: 0 12px 30px rgba(155, 89, 182, 0.3) !important;
+}
+
+.events-link:hover {
+    background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+    box-shadow: 0 12px 30px rgba(243, 156, 18, 0.3) !important;
+}
+
+.messages-link:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9) !important;
+    box-shadow: 0 12px 30px rgba(52, 152, 219, 0.3) !important;
+}

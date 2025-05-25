@@ -73,6 +73,9 @@ $oeuvres = getOeuvres($conn, $filtre, $tri);
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/modern.css">
     <link rel="stylesheet" href="css/oeuvres.css">
+    <script src="js/oeuvres.js"></script>
+    <script src="js/wishlist.js"></script>
+
 </head>
 <body>
     <?php include 'includes/header.php'; ?>

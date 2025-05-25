@@ -205,12 +205,145 @@ INSERT INTO tag_client (nom, couleur, description) VALUES
 
 
 
+-- Table pour les favoris d'événements
+CREATE TABLE favoris_evenements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idClient INT NOT NULL,
+    idEvenement INT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idClient) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE,
+    UNIQUE KEY unique_favori (idClient, idEvenement)
+);
+
+-- Table pour les logs d'actions
+CREATE TABLE log_actions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    action_type VARCHAR(50) NOT NULL,
+    event_id INT NULL,
+    description TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    INDEX idx_action_type (action_type),
+    INDEX idx_event_id (event_id),
+    INDEX idx_created_at (created_at),
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES Evenement(idEvenement) ON DELETE SET NULL
+);
+
+-- Optionnel : Table pour stocker les notifications
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    type ENUM('info', 'success', 'warning', 'error') DEFAULT 'info',
+    title VARCHAR(255),
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    INDEX idx_user_read (user_id, is_read),
+    INDEX idx_created_at (created_at)
+);
+
+-- Optionnel : Table pour les paramètres d'événements
+CREATE TABLE evenement_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idEvenement INT NOT NULL,
+    max_participants INT DEFAULT 100,
+    require_approval BOOLEAN DEFAULT FALSE,
+    allow_cancellation_hours INT DEFAULT 2,
+    send_reminders BOOLEAN DEFAULT TRUE,
+    reminder_hours_before INT DEFAULT 24,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE,
+    UNIQUE KEY unique_event_settings (idEvenement)
+);
+
+
+
+
+
+-- Ajouter une colonne date_inscription à la table Clientevenement
+-- (Optionnel - seulement si vous voulez une vraie date d'inscription)
+
+ALTER TABLE Clientevenement 
+ADD COLUMN date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Mettre à jour les enregistrements existants avec des dates simulées
+-- (Les nouvelles inscriptions auront automatiquement la date actuelle)
+
+UPDATE Clientevenement ce
+JOIN Evenement e ON ce.idEvenement = e.idEvenement
+SET ce.date_inscription = DATE_SUB(e.dateDebut, INTERVAL FLOOR(RAND() * 30 + 1) DAY)
+WHERE ce.date_inscription IS NULL;
+
+
+
+
+DROP TABLE IF EXISTS wishlist;
+CREATE TABLE wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idClient INT NOT NULL,
+    idOeuvre INT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idClient) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (idOeuvre) REFERENCES Oeuvre(idOeuvre) ON DELETE CASCADE,
+    UNIQUE KEY unique_wishlist (idClient, idOeuvre),
+    INDEX idx_client (idClient),
+    INDEX idx_oeuvre (idOeuvre)
+);e
 
 
 
 
 
 
+
+
+
+-- Table pour la liste de souhaits (wishlist)
+CREATE TABLE IF NOT EXISTS wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idClient INT NOT NULL,
+    idOeuvre INT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idClient) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (idOeuvre) REFERENCES Oeuvre(idOeuvre) ON DELETE CASCADE,
+    UNIQUE KEY unique_wishlist (idClient, idOeuvre),
+    INDEX idx_client (idClient),
+    INDEX idx_oeuvre (idOeuvre),
+    INDEX idx_date_ajout (date_ajout)
+);
+
+-- Insérer quelques données de test (optionnel)
+-- Remplacez les IDs par des IDs valides de votre base de données
+INSERT IGNORE INTO wishlist (idClient, idOeuvre) VALUES 
+(1, 1),  -- Client 1 aime l'œuvre 1
+(1, 3),  -- Client 1 aime l'œuvre 3
+(2, 1),  -- Client 2 aime l'œuvre 1
+(2, 2);  -- Client 2 aime l'œuvre 2
+
+-- Index pour optimiser les performances
+CREATE INDEX idx_wishlist_client_date ON wishlist(idClient, date_ajout DESC);
+
+-- Vue pour les statistiques de la wishlist
+CREATE OR REPLACE VIEW wishlist_stats AS
+SELECT 
+    w.idClient,
+    COUNT(*) as total_favoris,
+    SUM(o.prix) as valeur_totale,
+    AVG(o.prix) as prix_moyen,
+    MAX(w.date_ajout) as derniere_ajout,
+    MIN(w.date_ajout) as premiere_ajout
+FROM wishlist w
+JOIN Oeuvre o ON w.idOeuvre = o.idOeuvre
+WHERE o.disponibilite = TRUE
+GROUP BY w.idClient;
 
 
 
