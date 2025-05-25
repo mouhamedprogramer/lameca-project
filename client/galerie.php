@@ -1132,5 +1132,9 @@ if (isset($conn)) {
 
         console.log('Galerie virtuelle initialisée avec succès!');
     </script>
+    <?php
+    // Inclure le footer
+    require_once 'includes/footer.php';
+    ?>
 </body>
 </html>
