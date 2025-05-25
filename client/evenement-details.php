@@ -354,7 +354,7 @@ function tempsAvantEvenement($dateDebut) {
                         <div class="organizer-info">
                             <div class="organizer-photo">
                                 <?php 
-                                $organizer_photo = !empty($event['artisan_photo']) ? 'images/' . $event['artisan_photo'] : 'images/profile-placeholder.jpg';
+                                $organizer_photo = !empty($event['artisan_photo']) ? '../images/' . $event['artisan_photo'] : 'images/profile-placeholder.jpg';
                                 ?>
                                 <img src="<?php echo $organizer_photo; ?>" alt="<?php echo htmlspecialchars($event['artisan_prenom'] . ' ' . $event['artisan_nom']); ?>">
                             </div>
