@@ -217,7 +217,7 @@ function tempsEcoule($date) {
                                 <div class="work-card" onclick="window.location.href='oeuvre-details.php?id=<?php echo $oeuvre['idOeuvre']; ?>'">
                                     <div class="work-image">
                                         <?php 
-                                        $image_src = !empty($oeuvre['photo_principale']) ? $oeuvre['photo_principale'] : 'images/oeuvre-placeholder.jpg';
+                                        $image_src = !empty($oeuvre['photo_principale']) ? '../' . $oeuvre['photo_principale'] : 'images/oeuvre-placeholder.jpg';
                                         ?>
                                         <img src="<?php echo $image_src; ?>" alt="<?php echo htmlspecialchars($oeuvre['titre']); ?>">
                                         <div class="work-overlay">

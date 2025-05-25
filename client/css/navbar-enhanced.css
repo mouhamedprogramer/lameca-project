@@ -1,0 +1,287 @@
+/* ==================================================================
+   NAVBAR AMÉLIORÉE - STYLES POUR LES NOUVELLES ICÔNES
+   ================================================================== */
+
+/* Améliorations des actions utilisateur */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: #2c3e50;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.icon-link:hover {
+    background: rgba(52, 152, 219, 0.1);
+    border-color: rgba(52, 152, 219, 0.3);
+    color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+}
+
+.icon-link i {
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.icon-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Badges améliorés */
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+    border: 2px solid white;
+}
+
+.badge-favorites {
+    background: linear-gradient(135deg, #ad00f2, #8e44ad);
+    box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+}
+
+.badge-events {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+}
+
+/* Animation des badges */
+.badge {
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Icônes spéciales pour les événements */
+.fa-calendar-heart {
+    background: linear-gradient(135deg, #e74c3c, #9b59b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.fa-calendar-check {
+    color: #f39c12;
+}
+
+/* User info améliorée */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-family: 'Poppins', sans-serif;
+    min-width: 200px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.user-info i.fa-user-circle {
+    font-size: 24px;
+    color: #3498db;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.user-info span {
+    font-weight: 500;
+    font-size: 14px;
+    color: #2c3e50;
+    flex: 1;
+}
+
+.logout-btn {
+    color: #e74c3c;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.logout-btn:hover {
+    background: rgba(231, 76, 60, 0.1);
+    transform: scale(1.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .user-actions {
+        gap: 0.5rem;
+    }
+    
+    .icon-link {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .user-info {
+        min-width: 150px;
+        padding: 6px 12px;
+    }
+    
+    .user-info span {
+        font-size: 12px;
+    }
+    
+    .badge {
+        font-size: 0.6rem;
+        min-width: 16px;
+        height: 16px;
+        top: -6px;
+        right: -6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-info span {
+        display: none;
+    }
+    
+    .user-info {
+        min-width: auto;
+        padding: 8px;
+    }
+    
+    .icon-link {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .icon-link i {
+        font-size: 1rem;
+    }
+}
+
+/* Effets hover spéciaux */
+.icon-link[title*="favoris"]:hover {
+    background: rgba(155, 89, 182, 0.1);
+    border-color: rgba(155, 89, 182, 0.3);
+    color: #9b59b6;
+}
+
+.icon-link[title*="événements"]:hover {
+    background: rgba(243, 156, 18, 0.1);
+    border-color: rgba(243, 156, 18, 0.3);
+    color: #f39c12;
+}
+
+/* Tooltips améliorés */
+.icon-link::before {
+    content: attr(title);
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.icon-link::after {
+    content: '';
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #2c3e50;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.icon-link:hover::before,
+.icon-link:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Animation de chargement pour les badges */
+.badge.loading {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    animation: badgeLoading 1.5s ease-in-out infinite;
+}
+
+@keyframes badgeLoading {
+    0%, 100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Indicateur de nouvelles notifications */
+.badge.new {
+    animation: badgeNew 0.5s ease-in-out;
+}
+
+@keyframes badgeNew {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

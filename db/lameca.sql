@@ -205,13 +205,82 @@ INSERT INTO tag_client (nom, couleur, description) VALUES
 
 
 
+-- Table pour les favoris d'événements
+CREATE TABLE favoris_evenements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idClient INT NOT NULL,
+    idEvenement INT NOT NULL,
+    date_ajout TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idClient) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE,
+    UNIQUE KEY unique_favori (idClient, idEvenement)
+);
+
+-- Table pour les logs d'actions
+CREATE TABLE log_actions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    action_type VARCHAR(50) NOT NULL,
+    event_id INT NULL,
+    description TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    INDEX idx_action_type (action_type),
+    INDEX idx_event_id (event_id),
+    INDEX idx_created_at (created_at),
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES Evenement(idEvenement) ON DELETE SET NULL
+);
+
+-- Optionnel : Table pour stocker les notifications
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    type ENUM('info', 'success', 'warning', 'error') DEFAULT 'info',
+    title VARCHAR(255),
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    INDEX idx_user_read (user_id, is_read),
+    INDEX idx_created_at (created_at)
+);
+
+-- Optionnel : Table pour les paramètres d'événements
+CREATE TABLE evenement_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idEvenement INT NOT NULL,
+    max_participants INT DEFAULT 100,
+    require_approval BOOLEAN DEFAULT FALSE,
+    allow_cancellation_hours INT DEFAULT 2,
+    send_reminders BOOLEAN DEFAULT TRUE,
+    reminder_hours_before INT DEFAULT 24,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (idEvenement) REFERENCES Evenement(idEvenement) ON DELETE CASCADE,
+    UNIQUE KEY unique_event_settings (idEvenement)
+);
 
 
 
 
 
+-- Ajouter une colonne date_inscription à la table Clientevenement
+-- (Optionnel - seulement si vous voulez une vraie date d'inscription)
 
+ALTER TABLE Clientevenement 
+ADD COLUMN date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
+-- Mettre à jour les enregistrements existants avec des dates simulées
+-- (Les nouvelles inscriptions auront automatiquement la date actuelle)
+
+UPDATE Clientevenement ce
+JOIN Evenement e ON ce.idEvenement = e.idEvenement
+SET ce.date_inscription = DATE_SUB(e.dateDebut, INTERVAL FLOOR(RAND() * 30 + 1) DAY)
+WHERE ce.date_inscription IS NULL;
 
 
 
