@@ -296,7 +296,7 @@ CREATE TABLE wishlist (
     UNIQUE KEY unique_wishlist (idClient, idOeuvre),
     INDEX idx_client (idClient),
     INDEX idx_oeuvre (idOeuvre)
-);e
+);
 
 
 

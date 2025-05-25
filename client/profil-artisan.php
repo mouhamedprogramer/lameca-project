@@ -97,7 +97,7 @@ function tempsEcoule($date) {
                 <div class="profile-info">
                     <div class="profile-photo">
                         <?php 
-                        $photo_src = !empty($artisan['photo']) ? '../' . $artisan['photo'] : 'images/profile-placeholder.jpg';
+                        $photo_src = !empty($artisan['photo'])? '../images/' . $artisan['photo'] : 'images/profile-placeholder.jpg';
                         ?>
                         <img src="<?php echo $photo_src; ?>" alt="<?php echo htmlspecialchars($artisan['prenom'] . ' ' . $artisan['nom']); ?>">
                         

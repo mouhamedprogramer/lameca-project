@@ -337,7 +337,7 @@ function formaterDate($date) {
                             $stmtReco->execute();
                             $recos = $stmtReco->get_result();
                             
-                            while ($reco = $recos->fetch_assoc()):
+                            while ($reco = $recos->fetch_assoc()):  
                         ?>
                                 <div class="reco-card">
                                     <div class="reco-image">
