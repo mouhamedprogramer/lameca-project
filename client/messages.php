@@ -611,12 +611,23 @@ include 'includes/header.php';
                             <div class="conversation-item" 
                                  data-interlocuteur="<?= $conv['idInterlocuteur'] ?>"
                                  data-nom="<?= htmlspecialchars($conv['nom_interlocuteur']) ?>"
-                                 data-photo="<?= htmlspecialchars($conv['photo_interlocuteur'] ?? 'images/profile-placeholder.jpg') ?>"
-                                 data-role="<?= htmlspecialchars($conv['role_interlocuteur']) ?>">
+                                 data-photo="<?php 
+    $photo = $conv['photo_interlocuteur'] ?? 'profile-placeholder.jpg';
+    echo htmlspecialchars(
+        !empty($conv['photo_interlocuteur']) && $conv['photo_interlocuteur'] !== 'profile-placeholder.jpg' 
+            ? '../images/' . $photo
+            : 'images/' . $photo
+    );
+?>"                                 data-role="<?= htmlspecialchars($conv['role_interlocuteur']) ?>">
                                 
-                                <img src="<?= htmlspecialchars($conv['photo_interlocuteur'] ?? 'images/profile-placeholder.jpg') ?>" 
-                                     alt="<?= htmlspecialchars($conv['nom_interlocuteur']) ?>" 
-                                     class="conversation-avatar">
+                                 <img src="<?php 
+    $photo = $conv['photo_interlocuteur'] ?? 'profile-placeholder.jpg';
+    echo !empty($conv['photo_interlocuteur']) && $conv['photo_interlocuteur'] !== 'profile-placeholder.jpg' 
+        ? '../images/' . htmlspecialchars($photo)
+        : 'images/' . htmlspecialchars($photo);
+?>" 
+     alt="<?= htmlspecialchars($conv['nom_interlocuteur']) ?>" 
+     class="conversation-avatar">
                                 
                                 <div class="conversation-info">
                                     <div class="conversation-name"><?= htmlspecialchars($conv['nom_interlocuteur']) ?></div>
