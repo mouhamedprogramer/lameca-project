@@ -372,7 +372,7 @@ include 'includes/header.php';
         }
     </style>
 </head>
-<body>
+<body><br><br><br><br>
     <div class="legal-container">
         <!-- Header -->
         <div class="legal-header">

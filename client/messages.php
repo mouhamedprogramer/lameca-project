@@ -586,7 +586,7 @@ include 'includes/header.php';
         }
     </style>
 </head>
-<body>
+<body><br><br><br><br><br>
     <div class="messages-container">
         <div class="messages-header">
             <h1 class="messages-title">Messages</h1>

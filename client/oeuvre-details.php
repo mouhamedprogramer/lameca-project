@@ -1447,32 +1447,69 @@ $pageTitle = htmlspecialchars($oeuvre['titre']) . " - Artisano";
 
         // Actions des boutons
         function addToCart(idOeuvre, button) {
-            const icon = button.querySelector('i');
-            const text = button.querySelector('span');
+    console.log('DEBUG: Tentative d\'ajout au panier, ID œuvre:', idOeuvre);
+    
+    const icon = button.querySelector('i');
+    const text = button.querySelector('span');
+    
+    // État de chargement
+    button.classList.add('loading');
+    icon.className = 'spinner';
+    text.textContent = 'Ajout en cours...';
+    
+    // Requête AJAX
+    fetch('actions/ajouter-panier.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            idOeuvre: parseInt(idOeuvre)
+        })
+    })
+    .then(response => {
+        console.log('DEBUG: Réponse reçue:', response);
+        return response.json();
+    })
+    .then(data => {
+        console.log('DEBUG: Données reçues:', data);
+        
+        button.classList.remove('loading');
+        
+        if (data.success) {
+            button.classList.add('success');
+            icon.className = 'fas fa-check success-check';
+            text.textContent = 'Ajouté au panier !';
             
-            // État de chargement
-            button.classList.add('loading');
-            icon.className = 'spinner';
-            text.textContent = 'Ajout en cours...';
+            // Créer des particules de succès
+            createSuccessParticles(button);
             
-            // Simulation d'ajout au panier
+            // Afficher notification
+            showNotification('Œuvre ajoutée au panier avec succès !', 'success');
+            
+            // Retour à l'état normal après 3 secondes
             setTimeout(() => {
-                button.classList.remove('loading');
-                button.classList.add('success');
-                icon.className = 'fas fa-check success-check';
-                text.textContent = 'Ajouté au panier !';
-                
-                // Animation de particules de succès
-                createSuccessParticles(button);
-                
-                // Retour à l'état normal après 3 secondes
-                setTimeout(() => {
-                    button.classList.remove('success');
-                    icon.className = 'fas fa-shopping-cart';
-                    text.textContent = 'Ajouter au panier';
-                }, 3000);
-            }, 1500);
+                button.classList.remove('success');
+                icon.className = 'fas fa-shopping-cart';
+                text.textContent = 'Ajouter au panier';
+            }, 3000);
+        } else {
+            console.error('DEBUG: Erreur lors de l\'ajout:', data.message);
+            showNotification(data.message || 'Erreur lors de l\'ajout au panier', 'error');
+            
+            // Restaurer le bouton
+            icon.className = 'fas fa-shopping-cart';
+            text.textContent = 'Ajouter au panier';
         }
+    })
+    .catch(error => {
+        console.error('DEBUG: Erreur fetch:', error);
+        button.classList.remove('loading');
+        icon.className = 'fas fa-shopping-cart';
+        text.textContent = 'Ajouter au panier';
+        showNotification('Erreur de connexion', 'error');
+    });
+}
 
         function toggleWishlist(idOeuvre, button) {
             const icon = button.querySelector('i');

@@ -206,7 +206,7 @@ function formaterPrix($prix) {
                             <label class="checkbox-container">
                                 <input type="checkbox" id="accept-terms" required>
                                 <span class="checkmark"></span>
-                                J'accepte les <a href="conditions-generales.php" target="_blank">conditions générales</a> et la <a href="politique-confidentialite.php" target="_blank">politique de confidentialité</a>
+                                J'accepte les <a href="conditions.php" target="_blank">conditions générales</a> et la <a href="mentions.php" target="_blank">politique de confidentialité</a>
                             </label>
                         </div>
                     </div>
