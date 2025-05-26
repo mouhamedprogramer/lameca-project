@@ -1,0 +1,12 @@
+.premier-element {
+    border-collapse: collapse; /* Important pour fusionner les bordures */
+    width: 100%;
+  }
+
+  .premier-element, 
+  .premier-element th, 
+  .premier-element td {
+    border: 2px solid black;
+    padding: 8px;
+    text-align: left;
+  }

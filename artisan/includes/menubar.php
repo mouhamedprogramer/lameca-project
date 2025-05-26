@@ -19,6 +19,7 @@
       <li class=""><a href="produits.php"><i class="fa fa-shopping-bag" aria-hidden="true"></i> <span>Mes oeuvres</span></a></li>
       <li class=""><a href="clients.php"><i class="fa fa-users"></i> <span>Clients</span></a></li>
       <li class=""><a href="statistiques.php"><i class="fa fa-tasks"></i> <span>Statistiques</span></a></li>
+      <li class=""><a href="evenements.php"><i class="fa fa-calendar"></i> <span>Événements</span></a></li>
 
     </ul>
   </section>
