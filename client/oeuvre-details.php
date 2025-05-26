@@ -1129,7 +1129,7 @@ $pageTitle = htmlspecialchars($oeuvre['titre']) . " - Artisano";
     <div class="main-container">
         <!-- Breadcrumb moderne -->
         <nav class="breadcrumb">
-            <a href="accueil.php">
+            <a href="index.php">
                 <i class="fas fa-home"></i>
                 Accueil
             </a>
@@ -1477,22 +1477,71 @@ $pageTitle = htmlspecialchars($oeuvre['titre']) . " - Artisano";
         function toggleWishlist(idOeuvre, button) {
             const icon = button.querySelector('i');
             const text = button.querySelector('span');
+            const isCurrentlyActive = button.classList.contains('active');
             
-            button.classList.toggle('active');
+            // Animation du bouton
+            const originalContent = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Traitement...</span>';
             
-            if (button.classList.contains('active')) {
-                icon.className = 'fas fa-heart';
-                text.textContent = 'Dans les favoris';
-                
-                // Animation de coeur
-                icon.style.animation = 'heartBeat 0.6s ease';
-                setTimeout(() => {
-                    icon.style.animation = '';
-                }, 600);
-            } else {
-                icon.className = 'far fa-heart';
-                text.textContent = 'Favoris';
-            }
+            // Déterminer l'action
+            const action = isCurrentlyActive ? 'remove' : 'add';
+            
+            fetch('actions/wishlist.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idOeuvre: parseInt(idOeuvre),
+                    action: action
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.classList.toggle('active');
+                    
+                    if (button.classList.contains('active')) {
+                        icon.className = 'fas fa-heart';
+                        text.textContent = 'Dans les favoris';
+                        
+                        // Animation de coeur
+                        icon.style.animation = 'heartBeat 0.6s ease';
+                        setTimeout(() => {
+                            icon.style.animation = '';
+                        }, 600);
+                        
+                        showNotification('Œuvre ajoutée à vos favoris !', 'success');
+                    } else {
+                        icon.className = 'far fa-heart';
+                        text.textContent = 'Favoris';
+                        showNotification('Œuvre retirée de vos favoris', 'success');
+                    }
+                    
+                    // Mettre à jour le compteur dans le header
+                    if (window.updateBadgeCount) {
+                        fetch('actions/get-wishlist-count.php')
+                            .then(response => response.json())
+                            .then(countData => {
+                                if (countData.success) {
+                                    window.updateBadgeCount('badge-wishlist', countData.count);
+                                }
+                            });
+                    }
+                } else {
+                    showNotification(data.message || 'Erreur lors de la modification des favoris', 'error');
+                    button.innerHTML = originalContent;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur wishlist:', error);
+                showNotification('Erreur de connexion', 'error');
+                button.innerHTML = originalContent;
+            })
+            .finally(() => {
+                button.disabled = false;
+            });
         }
 
         // Effet de particules de succès

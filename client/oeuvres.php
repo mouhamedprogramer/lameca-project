@@ -215,5 +215,35 @@ $oeuvres = getOeuvres($conn, $filtre, $tri);
         });
     </script>
     <script src="js/oeuvres.js"></script>
+    <script>
+        <script>
+    // Fonction pour appliquer les filtres
+    function appliquerFiltres() {
+        const filtre = document.getElementById('filtre-prix').value;
+        const tri = document.getElementById('tri').value;
+        
+        let url = 'oeuvres.php?';
+        if (filtre) url += 'filtre=' + filtre + '&';
+        if (tri) url += 'tri=' + tri;
+        
+        window.location.href = url;
+    }
+
+    // Gestion du clic sur les cartes pour rediriger vers les détails
+    document.addEventListener('DOMContentLoaded', function() {
+        const oeuvreCards = document.querySelectorAll('.oeuvre-card');
+        
+        oeuvreCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const oeuvreId = this.dataset.id;
+                window.location.href = `oeuvre-details.php?id=${oeuvreId}`;
+            });
+        });
+        
+        // Initialiser la fonctionnalité wishlist
+        initWishlistFunctionality();
+    });
+</script>
+    </script>
 </body>
 </html>
