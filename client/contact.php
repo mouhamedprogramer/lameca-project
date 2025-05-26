@@ -1,55 +1,14 @@
 <?php
-// Inclure le header
-include 'includes/header.php';
-
-// Traitement du formulaire de contact
-$message_sent = false;
-$error_message = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
-    // Récupération et validation des données
-    $nom = trim($_POST['nom'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $telephone = trim($_POST['telephone'] ?? '');
-    $sujet = trim($_POST['sujet'] ?? '');
-    $message = trim($_POST['message'] ?? '');
-    $type_contact = $_POST['type_contact'] ?? 'general';
-    
-    // Validation basique
-    if (empty($nom) || empty($email) || empty($sujet) || empty($message)) {
-        $error_message = 'Veuillez remplir tous les champs obligatoires.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error_message = 'Veuillez saisir une adresse email valide.';
-    } else {
-        // Ici vous pouvez ajouter l'envoi d'email ou l'insertion en base de données
-        // Pour cet exemple, on simule un envoi réussi
-        $message_sent = true;
-        
-        // Exemple d'insertion en base (à décommenter si vous avez une table Messages)
-        /*
-        if (isset($conn)) {
-            try {
-                $query = "INSERT INTO Messages (nom, email, telephone, sujet, message, type_contact, date_creation) 
-                         VALUES (?, ?, ?, ?, ?, ?, NOW())";
-                $stmt = mysqli_prepare($conn, $query);
-                mysqli_stmt_bind_param($stmt, "ssssss", $nom, $email, $telephone, $sujet, $message, $type_contact);
-                mysqli_stmt_execute($stmt);
-                $message_sent = true;
-            } catch (Exception $e) {
-                $error_message = 'Erreur lors de l\'envoi du message. Veuillez réessayer.';
-            }
-        }
-        */
-    }
-}
+include_once 'includes/header.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | Artisano</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * {
             margin: 0;
@@ -59,10 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg,rgb(120, 130, 174) 0%,rgb(151, 96, 206) 100%);
             min-height: 100vh;
-            padding-top: 80px;
-            padding-top: 0; /* Supprime l'espace en haut */
+            padding-top: 0;
         }
 
         .contact-container {
@@ -300,25 +258,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
 
-        .submit-btn:active {
-            transform: translateY(-1px);
-        }
-
-        .submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: all 0.5s ease;
-        }
-
-        .submit-btn:hover::before {
-            left: 100%;
-        }
-
         .success-message,
         .error-message {
             padding: 1rem 1.5rem;
@@ -443,17 +382,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             font-family: 'Playfair Display', serif;
         }
 
-        .map-placeholder {
+        .map-header p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        #map {
             width: 100%;
             height: 400px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+        }
+
+        .custom-popup {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .custom-popup h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
             font-size: 1.1rem;
-            border: 2px dashed #dee2e6;
+        }
+
+        .custom-popup p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 0.3rem 0;
+        }
+
+        .custom-popup .address {
+            font-weight: 600;
+            color: #667eea;
         }
 
         @keyframes fadeInUp {
@@ -508,6 +472,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             .hours-grid {
                 grid-template-columns: 1fr;
             }
+
+            #map {
+                height: 300px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -531,6 +499,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="contact-container">
         <!-- Header -->
@@ -550,17 +519,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                 
                 <div class="info-item">
                     <div class="info-icon">
-                        <i class="fas fa-map-marker-alt"></i>
+                        📍
                     </div>
                     <div class="info-details">
                         <h3>Adresse</h3>
-                        <p>123 Rue des Artisans<br>75001 Paris, France</p>
+                        <p>2 Rues des Côtes d'Auty<br>91480 Varennes-Jarcy, France</p>
                     </div>
                 </div>
 
                 <div class="info-item">
                     <div class="info-icon">
-                        <i class="fas fa-phone"></i>
+                        📞
                     </div>
                     <div class="info-details">
                         <h3>Téléphone</h3>
@@ -570,7 +539,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
                 <div class="info-item">
                     <div class="info-icon">
-                        <i class="fas fa-envelope"></i>
+                        ✉️
                     </div>
                     <div class="info-details">
                         <h3>Email</h3>
@@ -580,7 +549,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
 
                 <div class="info-item">
                     <div class="info-icon">
-                        <i class="fas fa-clock"></i>
+                        🕒
                     </div>
                     <div class="info-details">
                         <h3>Horaires</h3>
@@ -589,18 +558,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                 </div>
 
                 <div class="social-links">
-                    <a href="#" class="social-link">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">💼</a>
                 </div>
             </div>
 
@@ -610,20 +571,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                     <h2>Envoyez-nous un message</h2>
                     <p>Nous vous répondrons dans les plus brefs délais</p>
                 </div>
-
-                <?php if ($message_sent): ?>
-                    <div class="success-message">
-                        <i class="fas fa-check-circle"></i>
-                        Votre message a été envoyé avec succès ! Nous vous répondrons bientôt.
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($error_message): ?>
-                    <div class="error-message">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <?= htmlspecialchars($error_message) ?>
-                    </div>
-                <?php endif; ?>
 
                 <div class="form-tabs">
                     <button type="button" class="tab-btn active" data-tab="general">Question générale</button>
@@ -637,33 +584,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nom">Nom complet <span class="required">*</span></label>
-                            <input type="text" id="nom" name="nom" required value="<?= htmlspecialchars($_POST['nom'] ?? '') ?>">
+                            <input type="text" id="nom" name="nom" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email <span class="required">*</span></label>
-                            <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                            <input type="email" id="email" name="email" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="telephone">Téléphone</label>
-                            <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($_POST['telephone'] ?? '') ?>">
+                            <input type="tel" id="telephone" name="telephone">
                         </div>
                         <div class="form-group">
                             <label for="sujet">Sujet <span class="required">*</span></label>
-                            <input type="text" id="sujet" name="sujet" required value="<?= htmlspecialchars($_POST['sujet'] ?? '') ?>">
+                            <input type="text" id="sujet" name="sujet" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="message">Message <span class="required">*</span></label>
-                        <textarea id="message" name="message" placeholder="Décrivez votre demande..." required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+                        <textarea id="message" name="message" placeholder="Décrivez votre demande..." required></textarea>
                     </div>
 
                     <button type="submit" name="send_message" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i>
-                        Envoyer le message
+                        ✈️ Envoyer le message
                     </button>
                 </form>
             </div>
@@ -722,31 +668,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             <div class="map-container">
                 <div class="map-header">
                     <h2>Notre localisation</h2>
-                    <p>Rendez-nous visite dans nos bureaux parisiens</p>
+                    <p>Rendez-nous visite dans nos bureaux de Varennes-Jarcy</p>
                 </div>
-                <div class="map-placeholder">
-                    <div style="text-align: center;">
-                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; margin-bottom: 1rem; color: #667eea;"></i>
-                        <p>Carte interactive à intégrer<br>(Google Maps, OpenStreetMap...)</p>
-                    </div>
-                </div>
+                <div id="map"></div>
             </div>
         </div>
     </div>
 
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <script>
+        // Initialisation de la carte
+        document.addEventListener('DOMContentLoaded', function() {
+            // Coordonnées approximatives de Varennes-Jarcy
+            const lat = 48.6833;
+            const lng = 2.5667;
+            
+            // Initialiser la carte
+            const map = L.map('map').setView([lat, lng], 15);
+            
+            // Ajouter les tuiles de la carte (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+            }).addTo(map);
+            
+            // Créer une icône personnalisée
+            const customIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background: linear-gradient(135deg, #667eea, #764ba2); width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 3px 10px rgba(0,0,0,0.3);"></div>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 30],
+                popupAnchor: [0, -30]
+            });
+            
+            // Ajouter un marqueur
+            const marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+            
+            // Contenu de la popup
+            const popupContent = `
+                <div class="custom-popup">
+                    <h3>🏢 Artisano</h3>
+                    <p class="address">2 Rues des Côtes d'Auty</p>
+                    <p>91480 Varennes-Jarcy</p>
+                    <p>📞 +33 1 23 45 67 89</p>
+                    <p>✉️ contact@artisano.fr</p>
+                    <hr style="margin: 10px 0; border: none; height: 1px; background: #e9ecef;">
+                    <p style="font-size: 0.8rem; color: #6c757d;">Lun-Ven: 9h-18h | Sam: 10h-16h</p>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent, {
+                maxWidth: 250,
+                className: 'custom-leaflet-popup'
+            });
+            
+            // Ouvrir la popup par défaut
+            marker.openPopup();
+            
+            // Ajouter un cercle pour montrer la zone de service
+            L.circle([lat, lng], {
+                color: '#667eea',
+                fillColor: '#667eea',
+                fillOpacity: 0.1,
+                radius: 500
+            }).addTo(map);
+            
+            // Effet de rebond au clic sur le marqueur
+            marker.on('click', function() {
+                this.setLatLng([lat + 0.001, lng]).setLatLng([lat, lng]);
+            });
+        });
+
         // Gestion des onglets
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                // Retirer la classe active de tous les boutons
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                // Ajouter la classe active au bouton cliqué
                 this.classList.add('active');
                 
-                // Mettre à jour le type de contact
                 document.getElementById('typeContact').value = this.dataset.tab;
                 
-                // Adapter le placeholder du message selon le type
                 const messageField = document.getElementById('message');
                 switch(this.dataset.tab) {
                     case 'general':
@@ -775,7 +777,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                 return false;
             }
 
-            // Validation email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 e.preventDefault();
@@ -783,13 +784,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                 return false;
             }
 
-            // Animation du bouton de soumission
             const submitBtn = document.querySelector('.submit-btn');
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+            submitBtn.innerHTML = '⏳ Envoi en cours...';
             submitBtn.disabled = true;
         });
 
-        // Fonction pour afficher les notifications
+        // Fonction de notification
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.style.cssText = `
@@ -804,7 +804,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
                 animation: slideInRight 0.3s ease;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             `;
-            notification.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${message}`;
+            notification.innerHTML = `${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'} ${message}`;
             
             document.body.appendChild(notification);
             
@@ -814,21 +814,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             }, 5000);
         }
 
-        // Ajout des animations CSS pour les notifications
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Animation des éléments au scroll
+        // Animations au scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -843,7 +829,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             });
         }, observerOptions);
 
-        // Observer les cartes FAQ
         document.querySelectorAll('.faq-card').forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(30px)';
@@ -851,23 +836,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
             observer.observe(card);
         });
 
-        // Effet parallaxe léger
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const header = document.querySelector('.contact-header');
-            if (header) {
-                header.style.transform = `translateY(${scrolled * 0.1}px)`;
-            }
-        });
-
         // Auto-resize du textarea
         document.getElementById('message').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = `${this.scrollHeight}px`;
         });
+
+        // Styles pour les animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .custom-leaflet-popup .leaflet-popup-content-wrapper {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            }
+            .custom-leaflet-popup .leaflet-popup-tip {
+                background: white;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
+    <?php
+include_once 'includes/footer.php';
+?>
 </body>
 </html>
-<?php
-// Inclure le footer
-include 'includes/footer.php';

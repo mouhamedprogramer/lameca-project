@@ -29,6 +29,8 @@
     transform: translateY(-100%);
 }
 
+
+
 /* Navbar moderne */
 .modern-navbar {
     display: flex;
@@ -1029,4 +1031,31 @@
     .modern-header {
         display: none;
     }
+}
+
+
+
+/* CSS à ajouter dans votre fichier navbar-enhanced.css */
+
+.user-name-link {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    padding: 5px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.user-name-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.user-name-link .user-name {
+    transition: all 0.3s ease;
+}
+
+.user-name-link:hover .user-name {
+    color: inherit;
 }

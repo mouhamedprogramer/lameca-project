@@ -258,9 +258,11 @@ $navPages = [
                         <i class="fas fa-user-circle"></i>
                     </div>
                     <div class="user-details">
-                        <span class="user-name">
-                            <?= htmlspecialchars($_SESSION['prenomUtilisateur'] . ' ' . $_SESSION['nomUtilisateur']) ?>
-                        </span>
+                        <a href="profil.php" class="user-name-link">
+                            <span class="user-name">
+                                <?= htmlspecialchars($_SESSION['prenomUtilisateur'] . ' ' . $_SESSION['nomUtilisateur']) ?>
+                            </span>
+                        </a>
                     </div>
                     <a href="logout.php" title="Déconnexion" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>

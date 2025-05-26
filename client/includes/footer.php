@@ -24,7 +24,7 @@
                         <li><a href="FAQ.php">FAQ</a></li>
                         <li><a href="contact.php">Contact</a></li>
                         <li><a href="mentions.php">Mentions Légales</a></li>
-                        <li><a href="politique-confidentialite.php">Politique de confidentialité</a></li>
+                        <li><a href="conditions.php">Conditions générale d'utilisation</a></li>
                     </ul>
                 </div>
                 

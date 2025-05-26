@@ -207,7 +207,7 @@ function getStatutEvenement($dateDebut, $dateFin = null) {
                             </div>
                             
                             <div class="card-image">
-                                <img src="images/events/event-<?= $event['idEvenement'] ?>.jpg" 
+                                <img src="../images/event.jpg" 
                                      alt="<?= htmlspecialchars($event['nomEvenement']) ?>"
                                      onerror="this.src='images/event-placeholder.jpg'">
                                 <div class="card-date">

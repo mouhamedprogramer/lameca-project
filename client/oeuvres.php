@@ -161,12 +161,7 @@ $oeuvres = getOeuvres($conn, $filtre, $tri);
                                 
                                 <div class="oeuvre-actions">
                                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Client'): ?>
-                                        <button class="btn-cart add-to-cart" data-id="<?= $oeuvre['idOeuvre'] ?>" onclick="event.stopPropagation();">
-                                            <i class="fas fa-shopping-cart"></i> Ajouter au panier
-                                        </button>
-                                        <button class="btn-wishlist add-to-wishlist" data-id="<?= $oeuvre['idOeuvre'] ?>" onclick="event.stopPropagation();">
-                                            <i class="far fa-heart"></i>
-                                        </button>
+                                        
                                     <?php else: ?>
                                         <a href="connexion.php" class="btn-cart" onclick="event.stopPropagation();">
                                             <i class="fas fa-user"></i> Se connecter pour acheter
