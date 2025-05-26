@@ -846,13 +846,7 @@ try {
             </p>
         </div>
     </div>
-</section> <h3 class="team-name">Eloise Lenoir</h3>
-            <p class="team-role">Community Manager & Relations Artisans</p>
-            <p class="team-description">
-                Élève ingénieur avec une sensibilité artistique, Éloïse anime notre 
-                communauté d'artisans et de clients, organise les événements et 
-                développe les partenariats avec les créateurs locaux.
-            </p>
+</section> 
         </div>
     </div>
 </section>

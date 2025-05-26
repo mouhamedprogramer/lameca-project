@@ -471,7 +471,7 @@ include 'includes/header.php';
         }
     </style>
 </head>
-<body>
+<body><br><br><br>
     <div class="contact-container">
         <a href="profil-artisan.php?id=<?= $idArtisan ?>" class="back-link">
             <i class="fas fa-arrow-left"></i>

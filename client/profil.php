@@ -205,7 +205,7 @@ include 'includes/header.php';
     <link rel="stylesheet" href="css/profil.css">
 </head>
 <body>
-
+<br><br><br><br><br><br>
 <div class="profile-container">
     <div class="profile-header">
         <div class="profile-banner">

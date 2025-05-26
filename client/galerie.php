@@ -605,6 +605,7 @@ if (isset($conn)) {
     </style>
 </head>
 <body>
+<br><br><br><br><br>
     <div class="gallery-container">
         <!-- Header -->
         <div class="gallery-header">
