@@ -152,16 +152,15 @@
               <tbody>
                   <?php
                     // Requête pour récupérer les œuvres avec les informations de l'artisan
-                    $sql = "SELECT u.telephone AS tel, u.email AS mail, u.date_naissance AS date_naissance, o.idArtisan,
+                    $sql = "SELECT u.telephone AS tel, u.email AS mail, u.date_naissance AS date_naissance, a.idArtisan,
                             u.nom AS nom_artisan, u.prenom AS prenom_artisan, a.specialite AS specialite
-                            FROM oeuvre o 
-                            LEFT JOIN artisan a ON o.idArtisan = a.idArtisan 
+                            FROM artisan a
                             LEFT JOIN utilisateur u ON a.idArtisan = u.idUtilisateur
-                            WHERE o.idArtisan = {$_SESSION['artisan']}
-                            ORDER BY o.datePublication DESC";
+                            WHERE a.idArtisan = {$_SESSION['artisan']}";
                     $query = $conn->query($sql);
                     
                     $row = $query->fetch_assoc();
+                    
                       
                     // Requête pour récupérer la photo de l'artisan
                     $sql = "SELECT u.photo AS photo_profil FROM utilisateur u 
