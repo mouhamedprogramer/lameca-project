@@ -157,11 +157,14 @@ if (!empty($query)) {
             transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
+            cursor: pointer;
         }
 
         .result-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: inherit;
         }
 
         .card-image {
@@ -243,6 +246,33 @@ if (!empty($query)) {
             border: 1px solid #f5c6cb;
         }
 
+        /* Styles spécifiques pour les différents types de cartes */
+        .artisan-card .card-meta {
+            display: block;
+        }
+
+        .artisan-location {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .event-card .card-subtitle {
+            color: #e67e22;
+        }
+
+        .event-location {
+            color: #95a5a6;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         @media (max-width: 768px) {
             .results-grid {
                 grid-template-columns: 1fr;
@@ -296,7 +326,7 @@ if (!empty($query)) {
             </h2>
             <div class="results-grid">
                 <?php foreach ($results['oeuvres'] as $oeuvre): ?>
-                    <a href="oeuvre.php?id=<?= $oeuvre['id'] ?>" class="result-card">
+                    <a href="oeuvre-details.php?id=<?= $oeuvre['id'] ?>" class="result-card oeuvre-card">
                         <div class="card-image">
                             <i class="fas fa-palette"></i>
                         </div>
@@ -326,10 +356,10 @@ if (!empty($query)) {
             </h2>
             <div class="results-grid">
                 <?php foreach ($results['artisans'] as $artisan): ?>
-                    <a href="artisan.php?id=<?= $artisan['id'] ?>" class="result-card">
+                    <a href="profil-artisan.php?id=<?= $artisan['id'] ?>" class="result-card artisan-card">
                         <div class="card-image">
                             <?php if (!empty($artisan['photo'])): ?>
-                                <img src="images/<?= htmlspecialchars($artisan['photo']) ?>" alt="<?= htmlspecialchars($artisan['nom']) ?>">
+                                <img src="../images/<?= htmlspecialchars($artisan['photo']) ?>" alt="<?= htmlspecialchars($artisan['nom']) ?>">
                             <?php else: ?>
                                 <i class="fas fa-user"></i>
                             <?php endif; ?>
@@ -338,7 +368,10 @@ if (!empty($query)) {
                             <div class="card-title"><?= htmlspecialchars($artisan['nom']) ?></div>
                             <div class="card-subtitle"><?= htmlspecialchars($artisan['specialite'] ?? 'Spécialité non définie') ?></div>
                             <div class="card-meta">
-                                <span><i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($artisan['ville'] ?? 'Localisation non définie') ?></span>
+                                <div class="artisan-location">
+                                    <i class="fas fa-map-marker-alt"></i> 
+                                    <?= htmlspecialchars($artisan['ville'] ?? 'Localisation non définie') ?>
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -356,7 +389,7 @@ if (!empty($query)) {
             </h2>
             <div class="results-grid">
                 <?php foreach ($results['evenements'] as $evenement): ?>
-                    <a href="evenement.php?id=<?= $evenement['id'] ?>" class="result-card">
+                    <a href="evenement-details.php?id=<?= $evenement['id'] ?>" class="result-card event-card">
                         <div class="card-image">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
@@ -367,7 +400,10 @@ if (!empty($query)) {
                                 <div class="card-description"><?= htmlspecialchars(substr($evenement['description'], 0, 100)) ?>...</div>
                             <?php endif; ?>
                             <div class="card-meta">
-                                <span><i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($evenement['lieu'] ?? 'Lieu non défini') ?></span>
+                                <div class="event-location">
+                                    <i class="fas fa-map-marker-alt"></i> 
+                                    <?= htmlspecialchars($evenement['lieu'] ?? 'Lieu non défini') ?>
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -380,6 +416,81 @@ if (!empty($query)) {
 </div>
 
 <?php include 'includes/footer.php'; ?>
+
+<script>
+// Animation d'entrée des cartes
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.result-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+});
+
+// Gestion des erreurs d'images
+document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', function() {
+        const parent = this.parentElement;
+        this.style.display = 'none';
+        
+        // Ajouter une icône de remplacement
+        const icon = document.createElement('i');
+        if (parent.closest('.artisan-card')) {
+            icon.className = 'fas fa-user';
+        } else if (parent.closest('.event-card')) {
+            icon.className = 'fas fa-calendar-alt';
+        } else {
+            icon.className = 'fas fa-palette';
+        }
+        icon.style.fontSize = '3em';
+        icon.style.color = '#999';
+        
+        parent.appendChild(icon);
+    });
+});
+
+// Amélioration de l'accessibilité
+document.querySelectorAll('.result-card').forEach(card => {
+    card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+        }
+    });
+    
+    // Rendre les cartes focusables
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+});
+
+// Feedback visuel lors du clic
+document.querySelectorAll('.result-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+        // Animation de clic
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 150);
+    });
+});
+</script>
 
 </body>
 </html>

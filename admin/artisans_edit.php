@@ -66,12 +66,14 @@
                     
                     $sql = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, mot_de_passe = ?, telephone = ?, adresse = ?, pays = ?, ville = ?, code_postal = ?, genre = ?, photo = ? WHERE idUtilisateur = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("ssssssssssi", $nom, $prenom, $email, $password, $telephone, $adresse, $pays, $ville, $code_postal, $genre, $filename, $id);
+                    $stmt->bind_param("sssssssssssi", $nom, $prenom, $email, $password, $telephone, $adresse, $pays, $ville, $code_postal, $genre, $filename, $id);
                 }
                 else{
+                    // CORRECTION: Enlever le paramètre mot_de_passe de la requête ET du bind_param
                     $sql = "UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, telephone = ?, adresse = ?, pays = ?, ville = ?, code_postal = ?, genre = ?, photo = ? WHERE idUtilisateur = ?";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("ssssssssssi", $nom, $prenom, $email, $telephone, $adresse, $pays, $ville, $code_postal, $genre, $filename, $id);
+                    // Suppression de $password des paramètres car il n'est pas dans la requête SQL
                 }
                 
                 $stmt->execute();
