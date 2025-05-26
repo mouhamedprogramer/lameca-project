@@ -135,7 +135,6 @@ function getStatutEvenement($dateDebut, $dateFin = null) {
     <link rel="stylesheet" href="css/modern.css">
     <link rel="stylesheet" href="css/evenements.css">
     <script src="js/modern.js" ></script>
-    <script src="js/modern.js" ></script>
     <script src="js/evenement-details.js" defer></script>
 </head>
 <body>

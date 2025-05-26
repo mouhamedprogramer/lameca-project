@@ -381,32 +381,39 @@ function tempsAvantEvenement($dateDebut) {
                     <?php endif; ?>
 
                     <!-- Actions rapides -->
-                    <div class="quick-actions">
-                        <h3><i class="fas fa-bolt"></i> Actions rapides</h3>
-                        <div class="actions-list">
-                            <button class="action-btn" onclick="ajouterAuCalendrier()">
-                                <i class="fas fa-calendar-plus"></i>
-                                <span>Ajouter au calendrier</span>
-                            </button>
-                            
-                            <button class="action-btn" onclick="partagerEvenement(<?php echo $event['idEvenement']; ?>)">
-                                <i class="fas fa-share-alt"></i>
-                                <span>Partager l'événement</span>
-                            </button>
-                            
-                            <button class="action-btn" onclick="ouvrirCarte('<?php echo urlencode($event['lieu']); ?>')">
-                                <i class="fas fa-map"></i>
-                                <span>Voir sur la carte</span>
-                            </button>
-                            
-                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Client'): ?>
-                                <button class="action-btn btn-report" onclick="signalerEvenement(<?php echo $event['idEvenement']; ?>)">
-                                    <i class="fas fa-flag"></i>
-                                    <span>Signaler un problème</span>
-                                </button>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+               <!-- Actions rapides -->
+<div class="quick-actions" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+    <h3 style="font-size: 1.3rem; font-weight: 600; color: #2c3e50; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-family: 'Poppins', sans-serif;">
+        <i class="fas fa-bolt" style="color: #667eea; font-size: 1.1rem;"></i> Actions rapides
+    </h3>
+    <div class="actions-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <button class="action-btn calendar-btn" onclick="ajouterAuCalendrier()" 
+                style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #f8f9fa, #ffffff); border: 2px solid transparent; border-radius: 15px; color: #2c3e50; font-size: 0.95rem; font-weight: 500; font-family: 'Poppins', sans-serif; text-decoration: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; width: 100%; box-sizing: border-box; text-align: left; outline: none;">
+            <i class="fas fa-calendar-plus" style="font-size: 1.1rem; color: #48bb78; transition: all 0.3s ease; position: relative; min-width: 20px; text-align: center; flex-shrink: 0;"></i>
+            <span style="position: relative; flex: 1; text-align: left; color: #2c3e50; font-weight: 500;">Ajouter au calendrier</span>
+        </button>
+        
+        <button class="action-btn share-btn" onclick="partagerEvenement(<?php echo $event['idEvenement']; ?>)"
+                style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #f8f9fa, #ffffff); border: 2px solid transparent; border-radius: 15px; color: #2c3e50; font-size: 0.95rem; font-weight: 500; font-family: 'Poppins', sans-serif; text-decoration: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; width: 100%; box-sizing: border-box; text-align: left; outline: none;">
+            <i class="fas fa-share-alt" style="font-size: 1.1rem; color: #4299e1; transition: all 0.3s ease; position: relative; min-width: 20px; text-align: center; flex-shrink: 0;"></i>
+            <span style="position: relative; flex: 1; text-align: left; color: #2c3e50; font-weight: 500;">Partager l'événement</span>
+        </button>
+        
+        <button class="action-btn map-btn" onclick="ouvrirCarte('<?php echo urlencode($event['lieu']); ?>')"
+                style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #f8f9fa, #ffffff); border: 2px solid transparent; border-radius: 15px; color: #2c3e50; font-size: 0.95rem; font-weight: 500; font-family: 'Poppins', sans-serif; text-decoration: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; width: 100%; box-sizing: border-box; text-align: left; outline: none;">
+            <i class="fas fa-map" style="font-size: 1.1rem; color: #ed8936; transition: all 0.3s ease; position: relative; min-width: 20px; text-align: center; flex-shrink: 0;"></i>
+            <span style="position: relative; flex: 1; text-align: left; color: #2c3e50; font-weight: 500;">Voir sur la carte</span>
+        </button>
+        
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Client'): ?>
+            <button class="action-btn btn-report" onclick="signalerEvenement(<?php echo $event['idEvenement']; ?>)"
+                    style="display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #fff5f5, #ffffff); border: 2px solid transparent; border-radius: 15px; color: #2c3e50; font-size: 0.95rem; font-weight: 500; font-family: 'Poppins', sans-serif; text-decoration: none; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; width: 100%; box-sizing: border-box; text-align: left; outline: none;">
+                <i class="fas fa-flag" style="font-size: 1.1rem; color: #e53e3e; transition: all 0.3s ease; position: relative; min-width: 20px; text-align: center; flex-shrink: 0;"></i>
+                <span style="position: relative; flex: 1; text-align: left; color: #2c3e50; font-weight: 500;">Signaler un problème</span>
+            </button>
+        <?php endif; ?>
+    </div>
+</div>
 
                     <!-- Événements similaires -->
                     <?php if ($result_similar->num_rows > 0): ?>
@@ -639,6 +646,36 @@ END:VCALENDAR`;
             }, 3000);
         }
     });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const actionBtns = document.querySelectorAll('.action-btn');
+    
+    actionBtns.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.2)';
+            this.style.borderColor = 'rgba(102, 126, 234, 0.3)';
+            
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'scale(1.1)';
+            }
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+            this.style.borderColor = 'transparent';
+            
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'scale(1)';
+            }
+        });
+    });
+});
+
     </script>
 </body>
 </html>
