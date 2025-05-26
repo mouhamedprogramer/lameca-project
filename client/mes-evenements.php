@@ -294,7 +294,7 @@ function getDateInscriptionSimulee($dateEvenement) {
                                     
                                     <div class="card-body">
                                         <div class="event-image">
-                                            <img src="images/events/event-<?= $event['idEvenement'] ?>.jpg" 
+                                        <img src="../images/event.jpg" 
                                                  alt="<?= htmlspecialchars($event['nomEvenement']) ?>"
                                                  onerror="this.src='images/event-placeholder.jpg'">
                                         </div>
@@ -539,7 +539,7 @@ function getDateInscriptionSimulee($dateEvenement) {
             
             div.innerHTML = `
                 <div class="grid-card-image">
-                    <img src="images/events/event-${event.idEvenement}.jpg" 
+                    <img src="../images/event.jpg" 
                          alt="${event.nomEvenement}"
                          onerror="this.src='images/event-placeholder.jpg'">
                     <div class="grid-card-date">

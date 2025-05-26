@@ -219,7 +219,7 @@ function formaterDate($date) {
                             
                             <div class="item-image">
                                 <?php 
-                                $image_src = !empty($oeuvre['photo_principale']) ? $oeuvre['photo_principale'] : 'images/oeuvre-placeholder.jpg';
+                                $image_src = !empty($oeuvre['photo_principale']) ? '../'.$oeuvre['photo_principale'] : 'images/oeuvre-placeholder.jpg';
                                 ?>
                                 <img src="<?= htmlspecialchars($image_src) ?>" alt="<?= htmlspecialchars($oeuvre['titre']) ?>">
                                 
@@ -310,60 +310,77 @@ function formaterDate($date) {
 
                 <!-- Recommandations -->
                 <section class="recommendations">
-                    <h2><i class="fas fa-magic"></i> Vous pourriez aussi aimer</h2>
-                    <p>Basé sur vos goûts et vos œuvres favorites</p>
-                    
-                    <div class="recommendations-grid">
-                        <?php
-                        // Récupérer quelques œuvres similaires basées sur les artisans favoris
-                        $artistesFavoris = array_unique(array_column($favoris, 'idArtisan'));
-                        if (!empty($artistesFavoris)) {
-                            $placeholders = str_repeat('?,', count($artistesFavoris) - 1) . '?';
-                            $sqlReco = "SELECT o.*, a.idArtisan, u.nom as artisan_nom, u.prenom as artisan_prenom,
-                                       (SELECT url FROM Photooeuvre WHERE idOeuvre = o.idOeuvre LIMIT 1) as photo_principale
-                                       FROM Oeuvre o
-                                       JOIN Artisan a ON o.idArtisan = a.idArtisan
-                                       JOIN Utilisateur u ON a.idArtisan = u.idUtilisateur
-                                       WHERE o.idArtisan IN ($placeholders) 
-                                       AND o.disponibilite = TRUE
-                                       AND o.idOeuvre NOT IN (SELECT idOeuvre FROM wishlist WHERE idClient = ?)
-                                       ORDER BY RAND()
-                                       LIMIT 4";
-                            
-                            $stmtReco = $conn->prepare($sqlReco);
-                            $params = array_merge($artistesFavoris, [$idClient]);
-                            $types = str_repeat('i', count($params));
-                            $stmtReco->bind_param($types, ...$params);
-                            $stmtReco->execute();
-                            $recos = $stmtReco->get_result();
-                            
-                            while ($reco = $recos->fetch_assoc()):
-                        ?>
-                                <div class="reco-card">
-                                    <div class="reco-image">
-                                        <img src="<?= htmlspecialchars($reco['photo_principale'] ?: 'images/oeuvre-placeholder.jpg') ?>" 
-                                             alt="<?= htmlspecialchars($reco['titre']) ?>">
-                                    </div>
-                                    <div class="reco-content">
-                                        <h4><?= htmlspecialchars($reco['titre']) ?></h4>
-                                        <p><?= htmlspecialchars($reco['artisan_prenom'] . ' ' . $reco['artisan_nom']) ?></p>
-                                        <div class="reco-price"><?= number_format($reco['prix'], 0, ',', ' ') ?>€</div>
-                                        <div class="reco-actions">
-                                            <button class="btn-add-wishlist" data-id="<?= $reco['idOeuvre'] ?>">
-                                                <i class="far fa-heart"></i>
-                                            </button>
-                                            <a href="oeuvre-details.php?id=<?= $reco['idOeuvre'] ?>" class="btn-view-reco">
-                                                Voir
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                        <?php 
-                            endwhile;
-                        }
-                        ?>
+    <h2><i class="fas fa-magic"></i> Vous pourriez aussi aimer</h2>
+    <p>Basé sur vos goûts et vos œuvres favorites</p>
+    
+    <div class="recommendations-grid">
+        <?php
+        // Récupérer quelques œuvres similaires basées sur les artisans favoris
+        $artistesFavoris = array_unique(array_column($favoris, 'idArtisan'));
+        if (!empty($artistesFavoris)) {
+            $placeholders = str_repeat('?,', count($artistesFavoris) - 1) . '?';
+            $sqlReco = "SELECT o.*, a.idArtisan, u.nom as artisan_nom, u.prenom as artisan_prenom,
+                       (SELECT url FROM Photooeuvre WHERE idOeuvre = o.idOeuvre LIMIT 1) as photo_principale
+                       FROM Oeuvre o
+                       JOIN Artisan a ON o.idArtisan = a.idArtisan
+                       JOIN Utilisateur u ON a.idArtisan = u.idUtilisateur
+                       WHERE o.idArtisan IN ($placeholders) 
+                       AND o.disponibilite = TRUE
+                       AND o.idOeuvre NOT IN (SELECT idOeuvre FROM wishlist WHERE idClient = ?)
+                       ORDER BY RAND()
+                       LIMIT 4";
+            
+            $stmtReco = $conn->prepare($sqlReco);
+            $params = array_merge($artistesFavoris, [$idClient]);
+            $types = str_repeat('i', count($params));
+            $stmtReco->bind_param($types, ...$params);
+            $stmtReco->execute();
+            $recos = $stmtReco->get_result();
+            
+            while ($reco = $recos->fetch_assoc()):  
+                // Construire le chemin correct pour l'image
+                $imageUrl = 'images/oeuvre-placeholder.jpg'; // Image par défaut
+                
+                if (!empty($reco['photo_principale'])) {
+                    // Vérifier si l'URL commence déjà par un chemin ou si c'est juste le nom du fichier
+                    if (strpos($reco['photo_principale'], 'http') === 0) {
+                        // C'est une URL complète
+                        $imageUrl = $reco['photo_principale'];
+                    } elseif (strpos($reco['photo_principale'], '../') === 0) {
+                        // Le chemin contient déjà ../
+                        $imageUrl = $reco['photo_principale'];
+                    } else {
+                        // C'est juste le nom du fichier, ajouter le chemin
+                        $imageUrl = '../' . $reco['photo_principale'];
+                    }
+                }
+        ?>
+                <div class="reco-card">
+                    <div class="reco-image">
+                        <img src="<?= htmlspecialchars($imageUrl) ?>" 
+                             alt="<?= htmlspecialchars($reco['titre']) ?>"
+                             onerror="this.src='images/oeuvre-placeholder.jpg'">
                     </div>
-                </section>
+                    <div class="reco-content">
+                        <h4><?= htmlspecialchars($reco['titre']) ?></h4>
+                        <p><?= htmlspecialchars($reco['artisan_prenom'] . ' ' . $reco['artisan_nom']) ?></p>
+                        <div class="reco-price"><?= number_format($reco['prix'], 0, ',', ' ') ?>€</div>
+                        <div class="reco-actions">
+                            <button class="btn-add-wishlist" data-id="<?= $reco['idOeuvre'] ?>">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <a href="oeuvre-details.php?id=<?= $reco['idOeuvre'] ?>" class="btn-view-reco">
+                                Voir
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        <?php 
+            endwhile;
+        }
+        ?>
+    </div>
+</section>
             <?php endif; ?>
         </div>
     </main>

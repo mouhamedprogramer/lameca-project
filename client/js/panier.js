@@ -1,143 +1,207 @@
-// JavaScript pour la page du panier
+// js/panier.js - Gestion complète du panier (adapté à votre API)
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion des boutons de quantité
-    const qtyButtons = document.querySelectorAll('.qty-btn');
-    const qtyInputs = document.querySelectorAll('.qty-input');
-    const removeButtons = document.querySelectorAll('.btn-remove');
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    const promoBtn = document.getElementById('apply-promo');
-
-    // Événements pour les boutons de quantité
-    qtyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const commandeId = this.dataset.id;
-            const isPlus = this.classList.contains('plus');
-            const input = document.querySelector(`.qty-input[data-id="${commandeId}"]`);
-            let currentQty = parseInt(input.value);
-
-            if (isPlus) {
-                if (currentQty < 10) {
-                    currentQty++;
-                    updateQuantity(commandeId, currentQty, input);
-                }
-            } else {
-                if (currentQty > 1) {
-                    currentQty--;
-                    updateQuantity(commandeId, currentQty, input);
-                }
-            }
+    // Gestion des boutons "Ajouter au panier"
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const oeuvreId = this.getAttribute('data-id');
+            ajouterAuPanier(oeuvreId, this);
         });
     });
-
-    // Événements pour les inputs de quantité
+    
+    // Gestion des quantités
+    const qtyBtns = document.querySelectorAll('.qty-btn');
+    const qtyInputs = document.querySelectorAll('.qty-input');
+    
+    qtyBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const commandeId = this.getAttribute('data-id');
+            const isPlus = this.classList.contains('plus');
+            const input = document.querySelector(`input[data-id="${commandeId}"]`);
+            
+            let newQty = parseInt(input.value);
+            if (isPlus) {
+                newQty = Math.min(newQty + 1, 10);
+            } else {
+                newQty = Math.max(newQty - 1, 1);
+            }
+            
+            input.value = newQty;
+            mettreAJourQuantite(commandeId, newQty);
+        });
+    });
+    
     qtyInputs.forEach(input => {
         input.addEventListener('change', function() {
-            const commandeId = this.dataset.id;
-            let qty = parseInt(this.value);
-            
-            if (qty < 1) qty = 1;
-            if (qty > 10) qty = 10;
-            
-            this.value = qty;
-            updateQuantity(commandeId, qty, this);
+            const commandeId = this.getAttribute('data-id');
+            let newQty = Math.max(1, Math.min(parseInt(this.value) || 1, 10));
+            this.value = newQty;
+            mettreAJourQuantite(commandeId, newQty);
         });
     });
-
-    // Événements pour les boutons de suppression
-    removeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const commandeId = this.dataset.id;
-            removeFromCart(commandeId);
+    
+    // Gestion des suppressions
+    const removeButtons = document.querySelectorAll('.btn-remove');
+    removeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const commandeId = this.getAttribute('data-id');
+            supprimerDuPanier(commandeId);
         });
     });
-
-    // Événement pour le bouton de checkout
+    
+    // Gestion du checkout
+    const checkoutBtn = document.querySelector('.checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function() {
-            window.location.href = 'checkout.php';
+            procederAuPaiement();
         });
     }
-
-    // Événement pour le code promo
-    if (promoBtn) {
-        promoBtn.addEventListener('click', function() {
+    
+    // Gestion du code promo
+    const applyPromoBtn = document.getElementById('apply-promo');
+    if (applyPromoBtn) {
+        applyPromoBtn.addEventListener('click', function() {
             const promoCode = document.getElementById('promo-code').value;
-            applyPromoCode(promoCode);
+            appliquerCodePromo(promoCode);
         });
     }
 });
 
-// Fonction pour mettre à jour la quantité
-function updateQuantity(commandeId, newQty, inputElement) {
-    const cartItem = inputElement.closest('.cart-item');
-    cartItem.classList.add('updating');
-
-    fetch('actions/update-cart-quantity.php', {
+// Fonction pour ajouter une œuvre au panier (adaptée à votre API JSON)
+function ajouterAuPanier(oeuvreId, button) {
+    // Animation du bouton
+    const originalText = button.innerHTML;
+    const originalClass = button.className;
+    
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ajout...';
+    button.disabled = true;
+    
+    // Requête AJAX avec JSON (comme votre API l'attend)
+    fetch('actions/ajouter-panier.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            idCommande: commandeId,
-            nouvelle_quantite: newQty
+            idOeuvre: parseInt(oeuvreId)
         })
     })
     .then(response => response.json())
     .then(data => {
-        cartItem.classList.remove('updating');
-        
         if (data.success) {
-            // Mettre à jour le prix total de l'article
-            const totalPriceElement = cartItem.querySelector('.total-price');
-            const unitPrice = parseFloat(totalPriceElement.dataset.unitPrice);
-            const newTotalPrice = unitPrice * newQty;
-            
-            totalPriceElement.textContent = formatPrice(newTotalPrice);
-            
-            // Mettre à jour les totaux
-            updateCartTotals();
+            // Succès
+            button.innerHTML = '<i class="fas fa-check"></i> Ajouté !';
+            button.className = 'btn-cart success';
             
             // Mettre à jour le compteur du panier dans le header
-            updateCartCount();
+            if (window.updateBadgeCount) {
+                window.updateBadgeCount('badge-cart', data.cart_count);
+            }
+            
+            // Afficher une notification
+            showNotification('Œuvre ajoutée au panier avec succès !', 'success');
+            
+            // Remettre le bouton normal après 2 secondes
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.className = originalClass;
+                button.disabled = false;
+            }, 2000);
             
         } else {
-            showNotification(data.message || 'Erreur lors de la mise à jour', 'error');
-            // Remettre la valeur précédente
-            inputElement.value = inputElement.defaultValue;
+            // Erreur
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+            button.className = 'btn-cart error';
+            
+            showNotification(data.message || 'Erreur lors de l\'ajout au panier', 'error');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.className = originalClass;
+                button.disabled = false;
+            }, 2000);
         }
     })
     .catch(error => {
         console.error('Erreur:', error);
-        cartItem.classList.remove('updating');
+        button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur';
+        button.className = 'btn-cart error';
+        
         showNotification('Erreur de connexion', 'error');
-        inputElement.value = inputElement.defaultValue;
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.className = originalClass;
+            button.disabled = false;
+        }, 2000);
     });
 }
 
-// Fonction pour supprimer un article du panier
-function removeFromCart(commandeId) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article de votre panier ?')) {
-        return;
-    }
-
-    const cartItem = document.querySelector(`.cart-item[data-id="${commandeId}"]`);
-    cartItem.classList.add('updating');
-
-    fetch('actions/remove-from-cart.php', {
+// Fonction pour mettre à jour la quantité (à adapter selon votre API)
+function mettreAJourQuantite(commandeId, quantite) {
+    fetch('actions/modifier-quantite-panier.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            idCommande: commandeId
+            idCommande: parseInt(commandeId),
+            quantite: parseInt(quantite)
         })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Animation de suppression
-            cartItem.style.transform = 'translateX(-100%)';
+            // Mettre à jour les prix affichés
+            const cartItem = document.querySelector(`[data-id="${commandeId}"]`);
+            const totalPriceElement = cartItem.querySelector('.total-price');
+            const unitPrice = parseFloat(totalPriceElement.getAttribute('data-unit-price'));
+            
+            totalPriceElement.textContent = formaterPrix(unitPrice * quantite);
+            
+            // Mettre à jour le total général
+            mettreAJourTotal();
+            
+            showNotification('Quantité mise à jour', 'success');
+        } else {
+            showNotification(data.message || 'Erreur lors de la mise à jour', 'error');
+            // Recharger la page en cas d'erreur
+            setTimeout(() => location.reload(), 1000);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        showNotification('Erreur de connexion', 'error');
+    });
+}
+
+// Fonction pour supprimer un article du panier
+function supprimerDuPanier(commandeId) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article du panier ?')) {
+        return;
+    }
+    
+    fetch('actions/supprimer-panier.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            idCommande: parseInt(commandeId)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Supprimer l'élément de la page
+            const cartItem = document.querySelector(`[data-id="${commandeId}"]`);
             cartItem.style.opacity = '0';
+            cartItem.style.transform = 'translateX(-100%)';
             
             setTimeout(() => {
                 cartItem.remove();
@@ -147,208 +211,198 @@ function removeFromCart(commandeId) {
                 if (remainingItems.length === 0) {
                     location.reload(); // Recharger pour afficher le panier vide
                 } else {
-                    updateCartTotals();
-                    updateCartCount();
+                    mettreAJourTotal();
                 }
             }, 300);
             
-            showNotification('Article supprimé du panier', 'info');
+            // Mettre à jour le compteur du panier
+            if (window.updateBadgeCount) {
+                window.updateBadgeCount('badge-cart', data.cart_count);
+            }
+            
+            showNotification('Article supprimé du panier', 'success');
         } else {
-            cartItem.classList.remove('updating');
             showNotification(data.message || 'Erreur lors de la suppression', 'error');
         }
     })
     .catch(error => {
         console.error('Erreur:', error);
-        cartItem.classList.remove('updating');
         showNotification('Erreur de connexion', 'error');
     });
 }
 
+// Fonction pour mettre à jour le total
+function mettreAJourTotal() {
+    let total = 0;
+    const totalPrices = document.querySelectorAll('.total-price');
+    
+    totalPrices.forEach(element => {
+        const priceText = element.textContent.replace(/[^\d,]/g, '').replace(',', '.');
+        const price = parseFloat(priceText) || 0;
+        total += price;
+    });
+    
+    document.getElementById('subtotal').textContent = formaterPrix(total);
+    document.getElementById('total').textContent = formaterPrix(total);
+}
+
+// Fonction pour formater les prix
+function formaterPrix(prix) {
+    return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR'
+    }).format(prix);
+}
+
+// Fonction pour procéder au paiement
+function procederAuPaiement() {
+    // Rediriger vers la page de paiement
+    window.location.href = 'checkout.php';
+}
+
 // Fonction pour appliquer un code promo
-function applyPromoCode(code) {
+function appliquerCodePromo(code) {
     if (!code.trim()) {
-        showNotification('Veuillez entrer un code promo', 'error');
+        showNotification('Veuillez entrer un code promo', 'warning');
         return;
     }
-
-    const promoBtn = document.getElementById('apply-promo');
-    const originalText = promoBtn.textContent;
-    promoBtn.textContent = 'Vérification...';
-    promoBtn.disabled = true;
-
-    fetch('actions/apply-promo.php', {
+    
+    fetch('actions/appliquer-promo.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            code_promo: code
+            code: code
         })
     })
     .then(response => response.json())
     .then(data => {
-        promoBtn.textContent = originalText;
-        promoBtn.disabled = false;
-
         if (data.success) {
-            showNotification('Code promo appliqué !', 'success');
-            updateCartTotals();
+            showNotification('Code promo appliqué avec succès !', 'success');
+            // Recharger la page pour afficher les nouveaux prix
+            setTimeout(() => location.reload(), 1000);
         } else {
             showNotification(data.message || 'Code promo invalide', 'error');
         }
     })
     .catch(error => {
         console.error('Erreur:', error);
-        promoBtn.textContent = originalText;
-        promoBtn.disabled = false;
-        showNotification('Erreur de connexion', 'error');
+        showNotification('Erreur lors de l\'application du code promo', 'error');
     });
-}
-
-// Fonction pour mettre à jour les totaux
-function updateCartTotals() {
-    let subtotal = 0;
-    
-    document.querySelectorAll('.total-price').forEach(element => {
-        const price = parseFloat(element.textContent.replace(/[^\d,]/g, '').replace(',', '.'));
-        if (!isNaN(price)) {
-            subtotal += price;
-        }
-    });
-
-    const subtotalElement = document.getElementById('subtotal');
-    const totalElement = document.getElementById('total');
-
-    if (subtotalElement) {
-        subtotalElement.textContent = formatPrice(subtotal);
-    }
-    
-    if (totalElement) {
-        totalElement.textContent = formatPrice(subtotal); // Sans frais de livraison pour l'instant
-    }
-}
-
-// Fonction pour mettre à jour le compteur du panier
-function updateCartCount() {
-    fetch('actions/get-cart-count.php')
-        .then(response => response.json())
-        .then(data => {
-            const cartBadge = document.getElementById('cart-count');
-            if (cartBadge && data.count !== undefined) {
-                cartBadge.textContent = data.count;
-                cartBadge.style.display = data.count > 0 ? 'inline' : 'none';
-            }
-        })
-        .catch(error => console.error('Erreur lors de la mise à jour du compteur:', error));
-}
-
-// Fonction utilitaire pour formater les prix
-function formatPrice(price) {
-    return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR'
-    }).format(price);
 }
 
 // Fonction pour afficher les notifications
 function showNotification(message, type = 'info') {
-    // Créer l'élément de notification
+    // Supprimer les notifications existantes
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notif => notif.remove());
+    
+    // Créer la nouvelle notification
     const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
+    notification.className = `notification ${type}`;
     notification.innerHTML = `
-        <i class="fas fa-${getNotificationIcon(type)}"></i>
-        <span>${message}</span>
-        <button class="notification-close">&times;</button>
+        <div class="notification-content">
+            <i class="fas ${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+        </div>
+        <button class="notification-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
     `;
-
-    // Ajouter les styles CSS si pas déjà présents
-    if (!document.getElementById('notification-styles')) {
-        const styles = document.createElement('style');
-        styles.id = 'notification-styles';
-        styles.textContent = `
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 10px;
-                color: white;
-                font-weight: 500;
-                z-index: 10000;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                transform: translateX(400px);
-                transition: transform 0.3s ease;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                min-width: 300px;
-            }
-            .notification.show {
-                transform: translateX(0);
-            }
-            .notification-success {
-                background: linear-gradient(135deg, #27ae60, #229954);
-            }
-            .notification-error {
-                background: linear-gradient(135deg, #e74c3c, #c0392b);
-            }
-            .notification-info {
-                background: linear-gradient(135deg, #3498db, #2980b9);
-            }
-            .notification-close {
-                background: none;
-                border: none;
-                color: white;
-                font-size: 18px;
-                cursor: pointer;
-                padding: 0;
-                margin-left: auto;
-            }
-        `;
-        document.head.appendChild(styles);
-    }
-
-    // Ajouter au DOM
-    document.body.appendChild(notification);
-
-    // Afficher avec animation
-    setTimeout(() => notification.classList.add('show'), 100);
-
-    // Gestion de la fermeture
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', () => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
+    
+    // Styles inline pour la notification
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${getNotificationColor(type)};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 300px;
+        max-width: 400px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+    `;
+    
+    // Styles pour le contenu
+    const notificationContent = notification.querySelector('.notification-content');
+    notificationContent.style.cssText = `
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    `;
+    
+    // Styles pour le bouton de fermeture
+    const closeButton = notification.querySelector('.notification-close');
+    closeButton.style.cssText = `
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        padding: 5px;
+        margin-left: 10px;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+    `;
+    
+    closeButton.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
     });
-
-    // Auto-fermeture après 5 secondes
+    
+    closeButton.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = 'transparent';
+    });
+    
+    document.body.appendChild(notification);
+    
+    // Animation d'entrée
     setTimeout(() => {
-        if (notification.parentNode) {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        }
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Suppression automatique après 5 secondes
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
     }, 5000);
 }
 
-// Fonction utilitaire pour les icônes de notification
 function getNotificationIcon(type) {
-    switch (type) {
-        case 'success': return 'check-circle';
-        case 'error': return 'exclamation-circle';
-        case 'info': return 'info-circle';
-        default: return 'bell';
+    switch(type) {
+        case 'success': return 'fa-check-circle';
+        case 'error': return 'fa-exclamation-circle';
+        case 'warning': return 'fa-exclamation-triangle';
+        default: return 'fa-info-circle';
     }
 }
 
-// Sauvegarde automatique du panier (optionnel)
-function autoSaveCart() {
-    // Cette fonction pourrait être utilisée pour sauvegarder le panier automatiquement
-    // Utile si on veut implémenter une sauvegarde côté client
+function getNotificationColor(type) {
+    switch(type) {
+        case 'success': return '#10b981';
+        case 'error': return '#ef4444';
+        case 'warning': return '#f59e0b';
+        default: return '#3b82f6';
+    }
 }
 
-// Gestion de la navigation retour
-window.addEventListener('popstate', function(event) {
-    // Rafraîchir le compteur du panier si l'utilisateur revient sur la page
-    updateCartCount();
-});
+// Fonction utilitaire pour déboguer
+function debugPanier() {
+    console.log('Debug: Boutons ajouter au panier trouvés:', document.querySelectorAll('.add-to-cart').length);
+    console.log('Debug: Session utilisateur:', {
+        connecte: typeof window.userConnected !== 'undefined' ? window.userConnected : 'Non défini'
+    });
+}

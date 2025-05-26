@@ -186,6 +186,7 @@ $navPages = [
     <link rel="stylesheet" href="css/modern.css">
     <link rel="stylesheet" href="css/navbar-enhanced.css">
     <script src="js/modern.js" defer></script>
+
 </head>
 <body>
 
@@ -260,7 +261,6 @@ $navPages = [
                         <span class="user-name">
                             <?= htmlspecialchars($_SESSION['prenomUtilisateur'] . ' ' . $_SESSION['nomUtilisateur']) ?>
                         </span>
-                        <span class="user-role"><?= htmlspecialchars($_SESSION['role']) ?></span>
                     </div>
                     <a href="logout.php" title="Déconnexion" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>

@@ -666,85 +666,89 @@ if (isset($conn)) {
 
         <!-- Gallery Grid -->
         <div class="gallery-grid grid-masonry" id="galleryGrid">
-            <?php if (!empty($oeuvres)): ?>
-                <?php foreach ($oeuvres as $oeuvre): ?>
-                    <div class="artwork-card" 
-                         data-titre="<?= strtolower(htmlspecialchars($oeuvre['titre'])) ?>"
-                         data-artisan="<?= strtolower(htmlspecialchars($oeuvre['prenomArtisan'] . ' ' . $oeuvre['nomArtisan'])) ?>"
-                         data-specialite="<?= strtolower(htmlspecialchars($oeuvre['specialite'] ?? '')) ?>"
-                         data-prix="<?= $oeuvre['prix'] ?>"
-                         onclick="openModal(<?= $oeuvre['idOeuvre'] ?>)">
-                        
-                        <div class="artwork-image-container">
-                            <?php 
-                            $mainImage = !empty($oeuvre['photos']) ? '../'.$oeuvre['photos'][0] : 'Images/placeholder-artwork.jpg';
-                            ?>
-                            <img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= htmlspecialchars($oeuvre['titre']) ?>" class="artwork-image">
-                            
-                            <div class="artwork-overlay">
-                                <button class="overlay-btn" title="Voir les détails">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="overlay-btn" title="Ajouter aux favoris">
-                                    <i class="far fa-heart"></i>
-                                </button>
-                                <button class="overlay-btn" title="Ajouter au panier">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </button>
-                            </div>
+    <?php if (!empty($oeuvres)): ?>
+        <?php foreach ($oeuvres as $oeuvre): ?>
+            <div class="artwork-card" 
+                 data-titre="<?= strtolower(htmlspecialchars($oeuvre['titre'])) ?>"
+                 data-artisan="<?= strtolower(htmlspecialchars($oeuvre['prenomArtisan'] . ' ' . $oeuvre['nomArtisan'])) ?>"
+                 data-specialite="<?= strtolower(htmlspecialchars($oeuvre['specialite'] ?? '')) ?>"
+                 data-prix="<?= $oeuvre['prix'] ?>"
+                 onclick="openModal(<?= $oeuvre['idOeuvre'] ?>)">
+                
+                <div class="artwork-image-container">
+                    <?php 
+                    $mainImage = !empty($oeuvre['photos']) ? '../'.$oeuvre['photos'][0] : 'Images/placeholder-artwork.jpg';
+                    ?>
+                    <img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= htmlspecialchars($oeuvre['titre']) ?>" class="artwork-image">
+                    
+                    <div class="artwork-overlay">
+                        <button class="overlay-btn" title="Voir les détails">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="overlay-btn" title="Ajouter aux favoris">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="overlay-btn" title="Ajouter au panier">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
 
-                            <?php if ($oeuvre['disponibilite']): ?>
-                                <div class="artwork-badge">Disponible</div>
-                            <?php endif; ?>
-                        </div>
+                    <?php if ($oeuvre['disponibilite']): ?>
+                        <div class="artwork-badge">Disponible</div>
+                    <?php endif; ?>
+                </div>
 
-                        <div class="artwork-info">
-                            <h3 class="artwork-title"><?= htmlspecialchars($oeuvre['titre']) ?></h3>
-                            <p class="artwork-description"><?= htmlspecialchars($oeuvre['description'] ?? '') ?></p>
+                <div class="artwork-info">
+                    <h3 class="artwork-title"><?= htmlspecialchars($oeuvre['titre']) ?></h3>
+                    <p class="artwork-description"><?= htmlspecialchars($oeuvre['description'] ?? '') ?></p>
 
-                            <div class="artwork-artist">
-                                <img src="<?= htmlspecialchars($oeuvre['photoArtisan'] ?? 'Images/default-avatar.jpg') ?>" 
-                                     alt="<?= htmlspecialchars($oeuvre['prenomArtisan'] . ' ' . $oeuvre['nomArtisan']) ?>" 
-                                     class="artist-avatar">
-                                <div class="artist-info">
-                                    <h4><?= htmlspecialchars($oeuvre['prenomArtisan'] . ' ' . $oeuvre['nomArtisan']) ?></h4>
-                                    <span class="artist-speciality"><?= htmlspecialchars($oeuvre['specialite'] ?? '') ?></span>
-                                </div>
-                            </div>
-
-                            <div class="artwork-footer">
-                                <div class="artwork-price"><?= number_format($oeuvre['prix'], 2) ?>€</div>
-                                <div class="artwork-actions">
-                                    <button class="action-btn" title="Ajouter aux favoris">
-                                        <i class="far fa-heart"></i> <?= $oeuvre['nbLikes'] ?>
-                                    </button>
-                                    <button class="action-btn" title="Ajouter au panier">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <?php if ($oeuvre['nbAvis'] > 0): ?>
-                                <div class="artwork-stats">
-                                    <div class="stat-item-small">
-                                        <span class="rating-stars">
-                                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                <i class="fas fa-star<?= $i <= $oeuvre['noteAvis'] ? '' : ' text-muted' ?>"></i>
-                                            <?php endfor; ?>
-                                        </span>
-                                        <span><?= $oeuvre['noteAvis'] ?>/5</span>
-                                    </div>
-                                    <div class="stat-item-small">
-                                        <i class="fas fa-comment"></i>
-                                        <span><?= $oeuvre['nbAvis'] ?> avis</span>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
+                    <div class="artwork-artist">
+                        <?php 
+                        // Construire le chemin correct pour la photo de l'artisan
+                        $photoArtisan = !empty($oeuvre['photoArtisan']) ? '../images/' . $oeuvre['photoArtisan'] : 'Images/default-avatar.jpg';
+                        ?>
+                        <img src="<?= htmlspecialchars($photoArtisan) ?>" 
+                             alt="<?= htmlspecialchars($oeuvre['prenomArtisan'] . ' ' . $oeuvre['nomArtisan']) ?>" 
+                             class="artist-avatar">
+                        <div class="artist-info">
+                            <h4><?= htmlspecialchars($oeuvre['prenomArtisan'] . ' ' . $oeuvre['nomArtisan']) ?></h4>
+                            <span class="artist-speciality"><?= htmlspecialchars($oeuvre['specialite'] ?? '') ?></span>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
+
+                    <div class="artwork-footer">
+                        <div class="artwork-price"><?= number_format($oeuvre['prix'], 2) ?>€</div>
+                        <div class="artwork-actions">
+                            <button class="action-btn" title="Ajouter aux favoris">
+                                <i class="far fa-heart"></i> <?= $oeuvre['nbLikes'] ?>
+                            </button>
+                            <button class="action-btn" title="Ajouter au panier">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <?php if ($oeuvre['nbAvis'] > 0): ?>
+                        <div class="artwork-stats">
+                            <div class="stat-item-small">
+                                <span class="rating-stars">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <i class="fas fa-star<?= $i <= $oeuvre['noteAvis'] ? '' : ' text-muted' ?>"></i>
+                                    <?php endfor; ?>
+                                </span>
+                                <span><?= $oeuvre['noteAvis'] ?>/5</span>
+                            </div>
+                            <div class="stat-item-small">
+                                <i class="fas fa-comment"></i>
+                                <span><?= $oeuvre['nbAvis'] ?> avis</span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
 
         <!-- No Results -->
         <div class="no-results" id="noResults">

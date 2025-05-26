@@ -255,12 +255,12 @@ $result_specialites = $conn->query($sql_specialites);
                 <div class="cta-content">
                     <h2>Vous êtes artisan ?</h2>
                     <p>Rejoignez notre communauté et partagez vos créations avec des passionnés d'art authentique</p>
-                    <a href="inscription-artisan.php" class="btn-cta">
+                    <a href="http://localhost/lameca/artisan/sign_up.php" class="btn-cta">
                         <i class="fas fa-plus-circle"></i> Devenir artisan
                     </a>
                 </div>
                 <div class="cta-image">
-                    <img src="images/artisan-workshop.jpg" alt="Atelier d'artisan">
+                    <img src="../images/20211028_164306.jpg" alt="Atelier d'artisan">
                 </div>
             </div>
         </div>

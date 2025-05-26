@@ -135,7 +135,6 @@ function getStatutEvenement($dateDebut, $dateFin = null) {
     <link rel="stylesheet" href="css/modern.css">
     <link rel="stylesheet" href="css/evenements.css">
     <script src="js/modern.js" ></script>
-    <script src="js/modern.js" ></script>
     <script src="js/evenement-details.js" defer></script>
 </head>
 <body>
@@ -321,7 +320,7 @@ function getStatutEvenement($dateDebut, $dateFin = null) {
                         <?php while ($event = $result->fetch_assoc()): ?>
                             <div class="event-card" data-id="<?php echo $event['idEvenement']; ?>">
                                 <div class="event-image">
-                                    <img src="images/events/Fatima_soukhouna.jpeg" 
+                                    <img src="../images/event.jpg" 
                                          alt="<?php echo htmlspecialchars($event['nomEvenement']); ?>"
                                          onerror="this.src='images/event-placeholder.jpg'">
                                     

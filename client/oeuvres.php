@@ -17,13 +17,13 @@ function getOeuvres($conn, $filtre = null, $tri = 'recent') {
     if ($filtre) {
         switch($filtre) {
             case 'prix-bas':
-                $query .= " AND o.prix < 100";
+                $query .= " AND o.prix < 1000";
                 break;
             case 'prix-moyen':
-                $query .= " AND o.prix BETWEEN 100 AND 500";
+                $query .= " AND o.prix BETWEEN 1000 AND 1500";
                 break;
             case 'prix-haut':
-                $query .= " AND o.prix > 500";
+                $query .= " AND o.prix > 1500";
                 break;
         }
     }
@@ -97,9 +97,9 @@ $oeuvres = getOeuvres($conn, $filtre, $tri);
                         <label>Filtrer par prix:</label>
                         <select id="filtre-prix" class="filter-select" onchange="appliquerFiltres()">
                             <option value="">Tous les prix</option>
-                            <option value="prix-bas" <?= $filtre == 'prix-bas' ? 'selected' : '' ?>>Moins de 100€</option>
-                            <option value="prix-moyen" <?= $filtre == 'prix-moyen' ? 'selected' : '' ?>>100€ - 500€</option>
-                            <option value="prix-haut" <?= $filtre == 'prix-haut' ? 'selected' : '' ?>>Plus de 500€</option>
+                            <option value="prix-bas" <?= $filtre == 'prix-bas' ? 'selected' : '' ?>>Moins de 1000€</option>
+                            <option value="prix-moyen" <?= $filtre == 'prix-moyen' ? 'selected' : '' ?>>1000€ - 1500€</option>
+                            <option value="prix-haut" <?= $filtre == 'prix-haut' ? 'selected' : '' ?>>Plus de 1500€</option>
                         </select>
                     </div>
                     
@@ -215,5 +215,35 @@ $oeuvres = getOeuvres($conn, $filtre, $tri);
         });
     </script>
     <script src="js/oeuvres.js"></script>
+    <script>
+        <script>
+    // Fonction pour appliquer les filtres
+    function appliquerFiltres() {
+        const filtre = document.getElementById('filtre-prix').value;
+        const tri = document.getElementById('tri').value;
+        
+        let url = 'oeuvres.php?';
+        if (filtre) url += 'filtre=' + filtre + '&';
+        if (tri) url += 'tri=' + tri;
+        
+        window.location.href = url;
+    }
+
+    // Gestion du clic sur les cartes pour rediriger vers les détails
+    document.addEventListener('DOMContentLoaded', function() {
+        const oeuvreCards = document.querySelectorAll('.oeuvre-card');
+        
+        oeuvreCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const oeuvreId = this.dataset.id;
+                window.location.href = `oeuvre-details.php?id=${oeuvreId}`;
+            });
+        });
+        
+        // Initialiser la fonctionnalité wishlist
+        initWishlistFunctionality();
+    });
+</script>
+    </script>
 </body>
 </html>
