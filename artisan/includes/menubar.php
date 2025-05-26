@@ -20,6 +20,7 @@
       <li class=""><a href="clients.php"><i class="fa fa-users"></i> <span>Clients</span></a></li>
       <li class=""><a href="statistiques.php"><i class="fa fa-tasks"></i> <span>Statistiques</span></a></li>
       <li class=""><a href="evenements.php"><i class="fa fa-calendar"></i> <span>Événements</span></a></li>
+      <li class=""><a href="messages.php"><i class="fa fa-calendar"></i> <span>Messagerie</span></a></li>
 
     </ul>
   </section>
