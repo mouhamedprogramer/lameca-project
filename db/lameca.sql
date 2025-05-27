@@ -300,6 +300,18 @@ CREATE TABLE wishlist (
 
 
 
+-- Table pour stocker les tokens de "Se souvenir de moi"
+CREATE TABLE remember_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(64) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(idUtilisateur) ON DELETE CASCADE,
+    INDEX idx_token (token),
+    INDEX idx_user_expires (user_id, expires_at)
+);
+
 
 
 
