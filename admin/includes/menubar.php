@@ -16,13 +16,14 @@
       <li class="header">RAPPORTS</li>
       <li class=""><a href="home.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
       <li class="header">GERER</li>
-      <li class=""><a href="utilisateurs.php"><span class="glyphicon glyphicon-lock"></span> <span>Utilisateurs</span></a></li>
-      <li class=""><a href="oeuvres.php"><i class="fa fa-tasks"></i> <span>Oeuvres</span></a></li>
-      <li class=""><a href="artisans.php"><i class="fa fa-tasks"></i> <span>Artisans</span></a></li>
-      <li class=""><a href="clients.php"><i class="fa fa-black-tie"></i> <span>Clients</span></a></li>
-      <li class=""><a href="commandes.php"><i class="fa fa-users"></i> <span>Commandes</span></a></li>
-      <li class=""><a href="evenements.php"><i class="fa fa-calendar"></i> <span>Événements</span></a></li>
-      <li class=""><a href="signalements.php"><i class="fa fa-flag"></i> <span>Signalements</span></a></li>
+      <li class=""><a href="utilisateurs.php"><i class="fa fa-users"></i> <span>Utilisateurs</span></a></li>
+<li class=""><a href="oeuvres.php"><i class="fa fa-paint-brush"></i> <span>Oeuvres</span></a></li>
+<li class=""><a href="artisans.php"><i class="fa fa-wrench"></i> <span>Artisans</span></a></li>
+<li class=""><a href="clients.php"><i class="fa fa-user-circle"></i> <span>Clients</span></a></li>
+<li class=""><a href="commandes.php"><i class="fa fa-shopping-cart"></i> <span>Commandes</span></a></li>
+<li class=""><a href="evenements.php"><i class="fa fa-calendar"></i> <span>Événements</span></a></li>
+<li class=""><a href="signalements.php"><i class="fa fa-flag"></i> <span>Signalements</span></a></li>
+<li class=""><a href="faq.php"><i class="fa fa-question-circle"></i> <span>FAQ</span></a></li>
 
       
     </ul>

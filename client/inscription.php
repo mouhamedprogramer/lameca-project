@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'includes/conn.php';
-require_once 'includes/header.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nom = trim($_POST['nom']);
@@ -60,6 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->close();
     }
 }
+
+require_once 'includes/header.php';
+
 ?>
 
 <!DOCTYPE html>

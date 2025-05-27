@@ -322,7 +322,7 @@ function tempsAvantEvenement($dateDebut) {
                                 <div class="participant-card">
                                     <div class="participant-photo">
                                         <?php 
-                                        $photo_src = !empty($participant['photo']) ? '../' . $participant['photo'] : 'images/profile-placeholder.jpg';
+                                        $photo_src = !empty($participant['photo']) ? '../images/' . $participant['photo'] : 'images/profile-placeholder.jpg';
                                         ?>
                                         <img src="<?php echo $photo_src; ?>" alt="<?php echo htmlspecialchars($participant['prenom']); ?>">
                                     </div>
@@ -423,7 +423,7 @@ function tempsAvantEvenement($dateDebut) {
                             <?php while ($similar = $result_similar->fetch_assoc()): ?>
                                 <div class="similar-card" onclick="window.location.href='evenement-details.php?id=<?php echo $similar['idEvenement']; ?>'">
                                     <div class="similar-image">
-                                        <img src="images/events/event-<?php echo $similar['idEvenement']; ?>.jpg" 
+                                        <img  src="../images/evenement.png" 
                                              alt="<?php echo htmlspecialchars($similar['nomEvenement']); ?>"
                                              onerror="this.src='images/event-placeholder.jpg'">
                                         <div class="similar-date">
