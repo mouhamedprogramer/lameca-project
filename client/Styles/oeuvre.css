@@ -1,0 +1,225 @@
+.hero-container {
+    position: relative;
+    text-align: center;
+  }
+  
+  .hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 3em;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  }
+/* Conteneur général de la barre de filtres */
+.filter-sidebar {
+  width: 220px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+}
+
+/* Titre des sections */
+.filter-sidebar h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/* Mots-clés */
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-tag {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.filter-tag .remove-tag {
+  margin-left: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Liste des filtres */
+.filter-list {
+  margin-bottom: 20px;
+}
+
+.filter-list label {
+  display: block;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.filter-list input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* Filtre de prix */
+.price-filter {
+  margin-bottom: 20px;
+}
+
+.price-filter input[type="range"] {
+  width: 100%;
+}
+
+.price-filter span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+/* Couleurs */
+.color-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.color-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.color-marron { background-color: #8B4513; }
+.color-vert { background-color: #228B22; }
+.color-rouge { background-color: #B22222; }
+
+/* Tailles */
+.size-options label {
+  margin-bottom: 5px;
+}
+/* Conteneur général de la barre de filtres */
+.filter-sidebar {
+  width: 220px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+}
+
+/* Titre des sections */
+.filter-sidebar h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/* Mots-clés */
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-tag {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.filter-tag .remove-tag {
+  margin-left: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Liste des filtres */
+.filter-list {
+  margin-bottom: 20px;
+}
+
+.filter-list label {
+  display: block;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.filter-list input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+/* Filtre de prix */
+.price-filter {
+  margin-bottom: 20px;
+}
+
+.price-filter input[type="range"] {
+  width: 100%;
+}
+
+.price-filter span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+/* Couleurs */
+.color-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.color-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.color-marron { background-color: #8B4513; }
+.color-vert { background-color: #228B22; }
+.color-rouge { background-color: #B22222; }
+
+/* Tailles */
+.size-options label {
+  margin-bottom: 5px;
+}
+
+
+
+  

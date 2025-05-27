@@ -98,7 +98,7 @@ if ($estClient && isset($conn)) {
             <ul>
                 <li><a href="accueil.php" class="active">Accueil</a></li>
                 <li><a href="artisans.php">Artisans</a></li>
-                <li><a href="oeuvres.php">Œuvres</a></li>
+                <li><a href="oeuvre.php">œuvres</a></li>
                 <li><a href="evenements.php">Événements</a></li>
                 <li><a href="galerie.php">Galerie Virtuelle</a></li>
                 <li><a href="FAQ.php">FAQ</a></li>
