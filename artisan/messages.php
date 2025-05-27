@@ -4,12 +4,13 @@ require_once 'includes/conn.php';
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['artisan'])) {
-    header('Location: connexion.php');
+    header('Location: index.php');
     exit;
 }
 
 $idUtilisateur = $_SESSION['artisan'];
 $roleUtilisateur = $_SESSION['role'];
+
 
 // Traitement AJAX pour envoyer un message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -169,7 +170,7 @@ function tempsEcoule($date) {
     return date('d/m/Y', $timestamp);
 }
 
-include 'includes/header.php';
+
 ?>
 
 <?php include 'includes/header.php'; ?>
